@@ -14,9 +14,10 @@ router.post('*', (req, res) => {
   
   if (text == '' || lastString== '00') {
     // This is the first request. Note how we start the response with CON
-    let response = `CON What would you want to check
-    1. My Account
-    2. My phone number`
+    let response = `CON Welcome to Twiga Payments Platform
+    1. Active Deliveries
+    2. Pending Deliveries
+    3. Make Payments`
     res.send(response)
   } else if (text == '1') {
     // Business logic for first level response
