@@ -3,5 +3,11 @@
         "username": "root",
         "password": "kev@50",
         "dbname": "twigs"
+    },
+    "sms": {
+        "URL" : "https://api.africastalking.com/restless/send",
+        "username" : "ossKenya",
+        "apiKey" : "fafaec7bdf65ab007a11936c4d5e1000ed105e9280f9f776199ef1de4d19f1a4",
+        "senderID" : "M-WEZA"
     }
 }

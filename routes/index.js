@@ -1,24 +1,30 @@
 const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
+const bcrypt = require('bcryptjs');
+
 const Person = require('../models/Person');
 const Agent = require('../models/Sales_Agent');
 const Customer = require('../models/Customer');
 const Customer_Type = require('../models/Customer_Account_Type');
+const sendSMS = require('../functions/sendSMS');
 
 //functions
 const registration = require('../functions/registration');
+const resetPassword = require('../functions/resetPassword');
+const customerModule = require('../functions/customer');
 
-router.get('*', (req, res) => {
+router.get('/', (req, res) => {
   res.send('Twiga Two Application');
 });
 
 router.post('*', async (req, res) => {
   let {sessionId, serviceCode, phoneNumber, text} = req.body
+  let phone = "+254"+phoneNumber.substring(phoneNumber.length - 9);
 
-  let customer = await Customer.findOne({ include: [Person], where: { CUSTOMER_MSISDN : phoneNumber } });
+  let customer = await Customer.findOne({ include: [Person], where: { CUSTOMER_MSISDN : phone } });
   //console.log(customer.person.FIRST_NAME);
-  let agent = await Agent.findOne({ include: [Person], where: { AGENT_MSISDN : phoneNumber } });
+  let agent = await Agent.findOne({ include: [Person], where: { AGENT_MSISDN : phone } });
   if(!customer && !agent){
     let response = `END Kindly contact M-Weza agent to register your account`
     res.send(response);
@@ -28,11 +34,8 @@ router.post('*', async (req, res) => {
   }
   else if(customer){
     res.send(customerUssd(customer,text,req));
-  } 
+  }
 });
-
-
-
 
 
 agentUssd : function agentUssd(agent,text,req){
@@ -60,45 +63,34 @@ agentUssd : function agentUssd(agent,text,req){
 }
 
 
-
-
-
 customerUssd : function customerUssd(customer,text,req){
   let array = _.split(text,'*')
   let lastString = _.last(array)
-  if(customer.ACTIVE != 1){
+  let firstString = _.first(array)
+  if(customer.PIN_RESET == 1){
+    return resetPassword(customer,text);
+  }
+  else if(customer.ACTIVE != 1){
     let response = `END ${customer.person.FIRST_NAME} your account is not actived`
     return response
   }else if (text == '' || lastString== '00') {
     // This is the first request. Note how we start the response with CON
     let response = `CON Welcome ${customer.person.FIRST_NAME} to Twiga Payments Platform
-    1. Active Deliveries
-    2. Pending Deliveries
-    3. Make Payments`
+    Input your password to proceed`
     //console.log(req.session);
     return response
-  } else if (text == '1') {
+  } else if (firstString.length == 4) {
     // Business logic for first level response
-    let response = `CON Choose account information you want to view
-    1. Account number
-    2. Account balance`
-    return response
-  } else if (text == '2') {
-    // Business logic for first level response
-    let response = `END Your phone number is ${phoneNumber}`
-    return response
-  } else if (text == '1*1') {
-    // Business logic for first level response
-    let accountNumber = 'ACC1001'
-    // This is a terminal request. Note how we start the response with END
-    let response = `END Your account number is ${accountNumber}`
-    return response
-  } else if (text == '1*2') {
-    // This is a second level response where the user selected 1 in the first instance
-    let balance = 'NGN 10,000'
-    // This is a terminal request. Note how we start the response with END
-    let response = `END Your balance is ${balance}`
-    return response
+    // BUSINESS LOGIC FOR
+    console.log(array[0])
+    let rst = bcrypt.compareSync(array[0], customer.PIN);
+    if(rst == true){
+      return customerModule(customer,text)
+    }else{
+      let response = `CON Wrong password.
+      1. 00 go back to previous menu`
+      return response
+    }    
   } else {
     let response = `CON Invalid Input
     00. Main Menu

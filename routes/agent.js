@@ -1,13 +1,17 @@
 let express = require('express');
 let router = express.Router();
 const _ = require('lodash');
+
 const Person = require('../models/Person');
 const Agent = require('../models/Sales_Agent');
 const Customer = require('../models/Customer');
 const Customer_Type = require('../models/Customer_Account_Type');
 
+//SMS send
+const sendSMS = require('../functions/sendSMS');
+
 router.get('*', (req, res) => {
-  res.send('Twiga Agent Application')
+  sendSMS("0727359578","funda, amka motherfucker tuchape kazi");
 });
 
 router.post('*', (req, res) => {

@@ -1,8 +1,14 @@
 const _ = require('lodash');
 const express = require('express');
+const bcrypt = require('bcryptjs');
+const last = require('voca/last');
+
+//MODELS
 const Person = require('../models/Person');
 const Agent = require('../models/Sales_Agent');
 const Customer = require('../models/Customer');
+//SMS
+const sendSMS = require('../functions/sendSMS');
 
 let registration = (text,req) => {
     
@@ -48,29 +54,67 @@ let registration = (text,req) => {
         let id = array[4];
         let gender = array[5];
         let dob = array[6];
-        let phone = array[7];
+        let phone = "+254"+last(array[7], 9);;
         let alternative_phone = array[8];
         let location = array[9];
 
-        let person = Person.create({
-            SURNAME: surname,
-            FIRST_NAME: firstname,
-            OTHER_NAMES: othernames,
-            GENDER: gender,
-            DATE_OF_BIRTH: dob,
-            ID_NUMBER: id,
-            PRIMARY_MSISDN: phone,
-            ALTERNATE_MSISDN: alternative_phone,
-            PHYSICAL_LOCATION: location,
-        }).then((person) => {
-            let customer = Customer.create({
-                CUSTOMER_MSISDN: phone,
-                PERSON_ID: person.PERSON_ID
-            }).then(() => {
-                // let response =`CON Registration successful!!`
-                // return response
-            });            
-        });
+        Person.findOne({ where: {ID_NUMBER: id} })
+        .then(person => {
+            // project will be the first entry of the Projects table with the title 'aProject' || null
+            //console.log(person);
+            if(!person){
+                let person = Person.create({
+                    SURNAME: surname,
+                    FIRST_NAME: firstname,
+                    OTHER_NAMES: othernames,
+                    GENDER: gender,
+                    DATE_OF_BIRTH: dob,
+                    ID_NUMBER: id,
+                    PRIMARY_MSISDN: phone,
+                    ALTERNATE_MSISDN: alternative_phone,
+                    PHYSICAL_LOCATION: location,
+                }).then((person) => {
+                    let code = Math.floor(1000 + Math.random() * 9000);
+                    let salt = bcrypt.genSaltSync(10);
+                    let hash = bcrypt.hashSync(code.toString(), salt);
+                    let customer = Customer.create({
+                        CUSTOMER_MSISDN: phone,
+                        PERSON_ID: person.PERSON_ID,
+                        PIN_RESET: 1,
+                        PIN: hash,
+                        SALT_KEY: salt
+                    }).then(() => {
+                        // let response =`CON Registration successful!!`
+                        // return response
+                        sendSMS(phone,"Your one time password is: "+code);
+                    });            
+                });
+            }else{
+                Customer.findOne({ where: {CUSTOMER_MSISDN: phone} })
+                .then((customer) => {
+                    if(!customer){
+                        let code = Math.floor(1000 + Math.random() * 9000);
+                        let salt = bcrypt.genSaltSync(10);
+                        let hash = bcrypt.hashSync(code.toString(), salt);
+                        let customer = Customer.create({
+                            CUSTOMER_MSISDN: phone,
+                            PERSON_ID: person.PERSON_ID,
+                            PIN_RESET: 1,
+                            PIN: hash,
+                            SALT_KEY: salt
+                        }).then((cus) => {
+                            sendSMS(phone,"Your one time password is: "+code);
+                            let response =`CON Registration successful!!`
+                            return response
+                        }); 
+                    }else{
+                        let response =`CON Client is already registered!!`
+                        return response
+                    }
+                })
+            }
+        });          
+
         let response =`CON Registration successful!!`
         return response
     }
