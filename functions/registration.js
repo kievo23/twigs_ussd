@@ -45,7 +45,8 @@ let registration = (text,req) => {
         let response =`CON Enter Physical location.`
         return response
     }else if(size == 10){
-        let response =`CON Congratulations, Register the client?.`
+        let response =`CON Congratulations, Register the client?. 
+        1. Complete registration`
         return response
     }else if(size == 11){
         let surname = array[1];
@@ -104,11 +105,11 @@ let registration = (text,req) => {
                             SALT_KEY: salt
                         }).then((cus) => {
                             sendSMS(phone,"Your one time password is: "+code);
-                            let response =`CON Registration successful!!`
+                            let response =`END Registration successful!!`
                             return response
                         }); 
                     }else{
-                        let response =`CON Client is already registered!!`
+                        let response =`END Client is already registered!!`
                         return response
                     }
                 })
