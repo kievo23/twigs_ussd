@@ -72,7 +72,7 @@ const Customer = sequelize.define('customers',{
         type: Sequelize.INTEGER,
         allowNull: true,
     },
-    edited_by: {
+    updated_by: {
         type: Sequelize.INTEGER,
         allowNull: true,
     },
