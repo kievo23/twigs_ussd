@@ -1,91 +1,90 @@
 const Sequelize = require("sequelize");
 const sequelize = require('../config/db');
 
-const Person = sequelize.define('persons',{
-    PERSON_ID: {
+const Person = sequelize.define('people',{
+    id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
     },
-    SURNAME : {
+    surname: {
         type: Sequelize.STRING,
         allowNull: false,
     },
-    FIRST_NAME :  {
+    first_name :  {
         type: Sequelize.STRING,
         allowNull: false,
     },
-    OTHER_NAMES: {
+    other_names: {
         type: Sequelize.STRING,
         allowNull: true,
     },
-    GENDER: {
+    gender: {
         type: Sequelize.STRING,
         allowNull: true,
     },
-    DATE_OF_BIRTH: {
+    date_of_birth: {
         type: Sequelize.DATE,
         allowNull: true,
     },
 
-    ID_NUMBER : {
+    id_number : {
         type: Sequelize.STRING,
         allowNull: false,
     },
-    PRIMARY_MSISDN :  {
+    primary_msisdn :  {
         type: Sequelize.STRING,
         allowNull: false,
     },
-    ALTERNATE_MSISDN: {
+    alternate_msisdn: {
         type: Sequelize.STRING,
         allowNull: true,
     },
-    POSTAL_ADDRESS: {
+    postal_address: {
         type: Sequelize.STRING,
         allowNull: true,
     },
-    PHYSICAL_LOCATION: {
+    physical_location: {
         type: Sequelize.STRING,
         allowNull: true,
     },
-    GEO_COORDINATES: {
+    geo_coordinates: {
         type: Sequelize.STRING,
         allowNull: true,
     },
-    ID_FRONT_IMAGE_URL: {
+    id_front_image_url: {
         type: Sequelize.STRING,
         allowNull: true,
     },
-    ID_REAR_IMAGE_URL: {
+    id_rear_image_url: {
         type: Sequelize.STRING,
         allowNull: true,
     },
-    ACTIVE: {
+    active: {
         type: Sequelize.BOOLEAN,
         allowNull: true,
     },
-    DELETED: {
+    deleted: {
         type: Sequelize.BOOLEAN,
         allowNull: true,
     },
-    DELETED: {
-        type: Sequelize.BOOLEAN,
-        allowNull: true,
-    },
-    CREATED_BY: {
+    created_by: {
         type: Sequelize.INTEGER,
         allowNull: true,
     },
-    EDITED_BY: {
+    edited_by: {
         type: Sequelize.INTEGER,
         allowNull: true,
     },
-    DELETED_BY: {
+    deleted_by: {
         type: Sequelize.INTEGER,
         allowNull: true,
-    }
+    },
+    createdAt: { type: Sequelize.DATE, field: 'created_at' },
+    updatedAt: { type: Sequelize.DATE, field: 'updated_at' }
   },{
-    timestamps: true // timestamps will now be true
+    timestamps: true, // timestamps will now be true
+    underscored: true
   }
 );
 

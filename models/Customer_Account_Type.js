@@ -2,50 +2,53 @@ const Sequelize = require("sequelize");
 const sequelize = require('../config/db');
 const PERSON = require('./Person');
 
-const Customer_type = sequelize.define('customer_account_type',{
-    CUSTOMER_ACCOUNT_TYPE_ID: {
+const Customer_type = sequelize.define('customer_account_types',{
+    id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
     },
-    CUSTOMER_ACCOUNT_TYPE :  {
+    customer_account_type:  {
         type: Sequelize.STRING,
         allowNull: false,
     },
-    DESCRIPTION: {
+    description: {
         type: Sequelize.TEXT,
         allowNull: true,
     },
-    MINIMUM_ACCOUNT_BALANCE: {
+    minimum_account_balance: {
         type: Sequelize.DOUBLE,
         allowNull: true,
     },
-    ACTIVE: {
+    active: {
         type: Sequelize.BOOLEAN,
         allowNull: true,
     },
-    DELETED: {
+    deleted: {
         type: Sequelize.BOOLEAN,
         allowNull: true,
     },
-    CREATED_BY: {
+    created_by: {
         type: Sequelize.INTEGER,
         allowNull: true,
     },
-    EDITED_BY: {
+    edited_by: {
         type: Sequelize.INTEGER,
         allowNull: true,
     },
-    DELETED: {
+    deleted: {
         type: Sequelize.BOOLEAN,
         allowNull: true,
     },
-    DELETED_BY: {
+    deleted_by: {
         type: Sequelize.INTEGER,
         allowNull: true,
-    }
+    },
+    createdAt: { type: Sequelize.DATE, field: 'created_at' },
+    updatedAt: { type: Sequelize.DATE, field: 'updated_at' }
   },{
-    timestamps: true // timestamps will now be true
+    timestamps: true, // timestamps will now be true
+    underscored: true
   }
 );
 

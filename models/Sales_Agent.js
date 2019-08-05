@@ -3,61 +3,60 @@ const sequelize = require('../config/db');
 const PERSON = require('./Person');
 
 const Sales_Agent = sequelize.define('sales_agent',{
-    AGENT_ID: {
+    id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
     },
-    AGENT_MSISDN: {
+    agent_msisdn: {
         type: Sequelize.STRING,
         allowNull: false,
     },
-    PIN :  {
+    pin :  {
         type: Sequelize.TEXT,
         allowNull: false,
     },
-    SALT_KEY: {
+    salt_key: {
         type: Sequelize.TEXT,
         allowNull: true,
     },
-    BLOCKED: {
+    blocked: {
         type: Sequelize.BOOLEAN,
         allowNull: true,
     },
-    PIN_RESET: {
+    pin_reset: {
         type: Sequelize.BOOLEAN,
         allowNull: true,
     },
-    LAST_PIN_CHANGE: {
+    last_pin_change: {
         type: Sequelize.DATE,
         allowNull: true, 
     },
-    ACTIVE: {
+    active: {
         type: Sequelize.BOOLEAN,
         allowNull: true,
     },
-    DELETED: {
+    deleted: {
         type: Sequelize.BOOLEAN,
         allowNull: true,
     },
-    DELETED: {
-        type: Sequelize.BOOLEAN,
-        allowNull: true,
-    },
-    CREATED_BY: {
+    created_by: {
         type: Sequelize.INTEGER,
         allowNull: true,
     },
-    EDITED_BY: {
+    edited_by: {
         type: Sequelize.INTEGER,
         allowNull: true,
     },
-    DELETED_BY: {
+    deleted_by: {
         type: Sequelize.INTEGER,
         allowNull: true,
-    }
+    },
+    createdAt: { type: Sequelize.DATE, field: 'created_at' },
+    updatedAt: { type: Sequelize.DATE, field: 'updated_at' }
   },{
-    timestamps: true // timestamps will now be true
+    timestamps: true, // timestamps will now be true
+    underscored: true
   }
 );
 
