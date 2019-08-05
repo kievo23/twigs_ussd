@@ -2,81 +2,96 @@ const Sequelize = require("sequelize");
 const sequelize = require('../config/db');
 const PERSON = require('./Person');
 
-const Customer = sequelize.define('customer',{
-    CUSTOMER_ID: {
+const Customer = sequelize.define('customers',{
+    id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
     },
-    CUSTOMER_MSISDN :  {
+    person_id :  {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+    },
+    customer_type_id :  {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+    },
+    customer_account_msisdn :  {
         type: Sequelize.STRING,
         allowNull: false,
     },
-    PIN: {
-        type: Sequelize.STRING,
+    pin: {
+        type: Sequelize.TEXT,
         allowNull: true,
     },
-    SALT_KEY: {
-        type: Sequelize.STRING,
+    salt_key: {
+        type: Sequelize.TEXT,
         allowNull: true,
     },
-    BLOCKED: {
+    blocked: {
         type: Sequelize.BOOLEAN,
         allowNull: true,
     },
-    PIN_RESET: {
+    pin_reset: {
         type: Sequelize.BOOLEAN,
         allowNull: true,
     },
-    LAST_PIN_CHANGE: {
+    last_pin_change: {
         type: Sequelize.DATE,
         allowNull: true,
     },
-    ACCOUNT_LIMIT: {
+    account_limit: {
         type: Sequelize.DOUBLE,
         allowNull: true,
     },
-    PREVIOUS_ACCOUNT_BALANCE: {
+    previous_account_balance: {
         type: Sequelize.DOUBLE,
         allowNull: true,
     },
-    AVAILABLE_ACCOUNT_BALANCE: {
+    actual_account_balance: {
         type: Sequelize.DOUBLE,
         allowNull: true,
     },
-    MINIMUM_ACCOUNT_BALANCE: {
+    available_account_balance: {
         type: Sequelize.DOUBLE,
         allowNull: true,
     },
-    ACTIVE: {
+    minimum_account_balance: {
+        type: Sequelize.DOUBLE,
+        allowNull: true,
+    },
+    active: {
         type: Sequelize.BOOLEAN,
         allowNull: true,
     },
-    DELETED: {
+    deleted: {
         type: Sequelize.BOOLEAN,
         allowNull: true,
     },
-    CREATED_BY: {
+    created_by: {
         type: Sequelize.INTEGER,
         allowNull: true,
     },
-    EDITED_BY: {
+    edited_by: {
         type: Sequelize.INTEGER,
         allowNull: true,
     },
-    DELETED: {
+    deleted: {
         type: Sequelize.BOOLEAN,
         allowNull: true,
     },
-    DELETED_BY: {
+    deleted_by: {
         type: Sequelize.INTEGER,
         allowNull: true,
-    }
+    },
+    createdAt: { type: Sequelize.DATE, field: 'created_at' },
+    updatedAt: { type: Sequelize.DATE, field: 'updated_at' }
   },{
-    timestamps: true // timestamps will now be true
+    timestamps: true, // timestamps will now be true
+    underscored: true
   }
 );
 
-Customer.belongsTo(PERSON, {foreignKey: 'PERSON_ID'});
+Customer.belongsTo(PERSON, {foreignKey: 'person_id'});
 
 module.exports = Customer;
