@@ -65,25 +65,25 @@ let registration = (text,req) => {
             //console.log(person);
             if(!person){
                 let person = Person.create({
-                    SURNAME: surname,
-                    FIRST_NAME: firstname,
-                    OTHER_NAMES: othernames,
-                    GENDER: gender,
-                    DATE_OF_BIRTH: dob,
-                    ID_NUMBER: id,
-                    PRIMARY_MSISDN: phone,
-                    ALTERNATE_MSISDN: alternative_phone,
-                    PHYSICAL_LOCATION: location,
+                    surname: surname,
+                    first_name: firstname,
+                    other_names: othernames,
+                    gender: gender,
+                    date_of_birth: dob,
+                    id_number: id,
+                    primary_msisdn: phone,
+                    alternate_msisdn: alternative_phone,
+                    physical_location: location,
                 }).then((person) => {
                     let code = Math.floor(1000 + Math.random() * 9000);
                     let salt = bcrypt.genSaltSync(10);
                     let hash = bcrypt.hashSync(code.toString(), salt);
                     let customer = Customer.create({
-                        CUSTOMER_MSISDN: phone,
-                        PERSON_ID: person.PERSON_ID,
-                        PIN_RESET: 1,
-                        PIN: hash,
-                        SALT_KEY: salt
+                        customer_msisdn: phone,
+                        person_id: person.PERSON_ID,
+                        pin_reset: 1,
+                        pin: hash,
+                        salt_key: salt
                     }).then(() => {
                         // let response =`CON Registration successful!!`
                         // return response
@@ -98,11 +98,11 @@ let registration = (text,req) => {
                         let salt = bcrypt.genSaltSync(10);
                         let hash = bcrypt.hashSync(code.toString(), salt);
                         let customer = Customer.create({
-                            CUSTOMER_MSISDN: phone,
-                            PERSON_ID: person.PERSON_ID,
-                            PIN_RESET: 1,
-                            PIN: hash,
-                            SALT_KEY: salt
+                            customer_msisdn: phone,
+                            person_id: person.PERSON_ID,
+                            pin_reset: 1,
+                            pin: hash,
+                            salt_key: salt
                         }).then((cus) => {
                             sendSMS(phone,"Your one time password is: "+code);
                             let response =`END Registration successful!!`
