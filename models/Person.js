@@ -27,7 +27,6 @@ const Person = sequelize.define('people',{
         type: Sequelize.DATE,
         allowNull: true,
     },
-
     id_number : {
         type: Sequelize.STRING,
         allowNull: false,
@@ -72,7 +71,7 @@ const Person = sequelize.define('people',{
         type: Sequelize.INTEGER,
         allowNull: true,
     },
-    edited_by: {
+    updated_by: {
         type: Sequelize.INTEGER,
         allowNull: true,
     },

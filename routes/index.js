@@ -25,6 +25,7 @@ router.post('*', async (req, res) => {
   let customer = await Customer.findOne({ include: [Person], where: { customer_account_msisdn : phone } });
   //console.log(customer.person.FIRST_NAME);
   let agent = await Agent.findOne({ include: [Person], where: { agent_msisdn : phone } });
+  //console.log(agent);
   if(!customer && !agent){
     let response = `END Kindly contact M-Weza agent to register your account`
     res.send(response);

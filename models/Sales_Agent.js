@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 const sequelize = require('../config/db');
 const PERSON = require('./Person');
 
-const Sales_Agent = sequelize.define('sales_agent',{
+const Sales_Agent = sequelize.define('sales_agents',{
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -44,7 +44,7 @@ const Sales_Agent = sequelize.define('sales_agent',{
         type: Sequelize.INTEGER,
         allowNull: true,
     },
-    edited_by: {
+    updated_by: {
         type: Sequelize.INTEGER,
         allowNull: true,
     },

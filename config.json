@@ -2,7 +2,7 @@
     "db": {
         "username": "root",
         "password": "kev@50",
-        "dbname": "twiga"
+        "dbname": "twiganew"
     },
     "sms": {
         "URL" : "https://api.africastalking.com/restless/send",
