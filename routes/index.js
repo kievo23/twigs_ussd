@@ -25,7 +25,7 @@ router.post('*', async (req, res) => {
   let customer = await Customer.findOne({ include: [Person], where: { customer_account_msisdn : phone } });
   //console.log(customer.person.FIRST_NAME);
   let agent = await Agent.findOne({ include: [Person], where: { agent_msisdn : phone } });
-  console.log(agent);
+  //console.log(agent);
   if(!customer && !agent){
     let response = `END Kindly contact M-Weza agent to register your account`
     res.send(response);
@@ -44,10 +44,10 @@ agentUssd : function agentUssd(agent,text,req){
   let lastString = _.last(array)
   let firstString = _.first(array)
   if(agent.ACTIVE != 1){
-    let response = `CON agent ${agent.person.FIRST_NAME} your account is not actived`
+    let response = `CON agent ${agent.person.first_name} your account is not actived`
     return response
   }else if(text == '' || lastString== '00'){
-    let response = `CON Welcome agent ${agent.person.FIRST_NAME} your account is ready!!
+    let response = `CON Welcome agent ${agent.person.first_name} your account is ready!!
     1. Register Customer
     2. Activate Customer
     3. Reset a Customer Password`
@@ -72,11 +72,11 @@ customerUssd : function customerUssd(customer,text,req){
     return resetPassword(customer,text);
   }
   else if(customer.ACTIVE != 1){
-    let response = `END ${customer.person.FIRST_NAME} your account is not actived`
+    let response = `END ${customer.person.first_name} your account is not actived`
     return response
   }else if (text == '' || lastString== '00') {
     // This is the first request. Note how we start the response with CON
-    let response = `CON Welcome ${customer.person.FIRST_NAME} to Twiga Payments Platform
+    let response = `CON Welcome ${customer.person.first_name} to Twiga Payments Platform
     Input your password to proceed`
     //console.log(req.session);
     return response
