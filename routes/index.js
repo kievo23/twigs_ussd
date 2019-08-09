@@ -20,7 +20,8 @@ router.get('/', (req, res) => {
 
 router.post('/test', async (req, res) => {
   let customer = await Customer.findOne({ where: { customer_account_msisdn : req.body.phone } });
-  return notifyTwiga(customer);
+  //console.log(customer)
+  return registration.notifyTwiga(customer);
 });
 
 router.post('*', async (req, res) => {
@@ -58,7 +59,7 @@ agentUssd : function agentUssd(agent,text,req){
     3. Reset a Customer Password`
     return response
   }else if(firstString == '1'){
-    return registration(text,req)
+    return registration.registration(text,req)
   }else if(text == '2'){
     let response =`CON Enter Customer Number`
     return response
