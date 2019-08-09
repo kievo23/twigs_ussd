@@ -58,7 +58,6 @@ let registration = (text,req) => {
         let phone = "+254"+last(array[7], 9);;
         let alternative_phone = array[8];
         let location = array[9];
-
         Person.findOne({ where: {id_number: id} })
         .then(person => {
             // project will be the first entry of the Projects table with the title 'aProject' || null
@@ -80,7 +79,7 @@ let registration = (text,req) => {
                     let hash = bcrypt.hashSync(code.toString(), salt);
                     Customer.create({
                         customer_account_msisdn: phone,
-                        person_id: person.person_id,
+                        person_id: person.id,
                         pin_reset: 1,
                         pin: hash,
                         salt_key: salt
