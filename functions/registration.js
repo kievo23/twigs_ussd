@@ -80,7 +80,7 @@ let registration = (text,req) => {
                     let hash = bcrypt.hashSync(code.toString(), salt);
                     Customer.create({
                         customer_msisdn: phone,
-                        person_id: person.PERSON_ID,
+                        person_id: person.person_id,
                         pin_reset: 1,
                         pin: hash,
                         salt_key: salt
@@ -102,7 +102,7 @@ let registration = (text,req) => {
                         let hash = bcrypt.hashSync(code.toString(), salt);
                         let customer = Customer.create({
                             customer_msisdn: phone,
-                            person_id: person.PERSON_ID,
+                            person_id: person.person_id,
                             pin_reset: 1,
                             pin: hash,
                             salt_key: salt
@@ -120,7 +120,7 @@ let registration = (text,req) => {
             }
         });          
 
-        let response =`CON Registration successful!!`
+        let response =`END Registration successful!!`
         return response
     }
 }
