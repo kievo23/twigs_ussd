@@ -59,7 +59,7 @@ let registration = (text,req) => {
         let alternative_phone = array[8];
         let location = array[9];
 
-        Person.findOne({ where: {ID_NUMBER: id} })
+        Person.findOne({ where: {id_number: id} })
         .then(person => {
             // project will be the first entry of the Projects table with the title 'aProject' || null
             //console.log(person);
@@ -94,14 +94,14 @@ let registration = (text,req) => {
                     });
                 });
             }else{
-                Customer.findOne({ where: {CUSTOMER_MSISDN: phone} })
+                Customer.findOne({ where: {customer_account_msisdn: phone} })
                 .then((customer) => {
                     if(!customer){
                         let code = Math.floor(1000 + Math.random() * 9000);
                         let salt = bcrypt.genSaltSync(10);
                         let hash = bcrypt.hashSync(code.toString(), salt);
                         let customer = Customer.create({
-                            customer_msisdn: phone,
+                            customer_account_msisdn: phone,
                             person_id: person.person_id,
                             pin_reset: 1,
                             pin: hash,
