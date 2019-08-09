@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
   res.send('Twiga Two Application');
 });
 
-router.post('/test', (req, res) => {
+router.post('/test', async (req, res) => {
   let customer = await Customer.findOne({ where: { customer_account_msisdn : req.body.phone } });
   return notifyTwiga(customer);
 });
