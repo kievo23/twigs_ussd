@@ -2,7 +2,7 @@ const _ = require('lodash');
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const last = require('voca/last');
-
+const request = require("request");
 //MODELS
 const Person = require('../models/Person');
 const Agent = require('../models/Sales_Agent');
@@ -88,6 +88,8 @@ let registration = (text,req) => {
                         // let response =`CON Registration successful!!`
                         // return response
                         sendSMS(phone,"Your one time password is: "+code);
+                        let response =`END Registration successful!!`
+                        return response
                     });            
                 });
             }else{
@@ -103,8 +105,9 @@ let registration = (text,req) => {
                             pin_reset: 1,
                             pin: hash,
                             salt_key: salt
-                        }).then((cus) => {
+                        }).then((customer) => {
                             sendSMS(phone,"Your one time password is: "+code);
+                            notifyTwiga(customer);
                             let response =`END Registration successful!!`
                             return response
                         }); 
@@ -120,5 +123,36 @@ let registration = (text,req) => {
         return response
     }
 }
+
+let notifyTwiga = (user) => {
+    Customer.findOne({ include: [Person], where: {CUSTOMER_MSISDN: user.phone} })
+    .then(function(d){
+        console.log(d);
+    });
+    end();
+    var options = { method: 'POST',
+    url: 'https://staging.dms-v2.api.twiga.tech/integrations/fintech/v2/opt_in',
+    headers:
+    { 'Postman-Token': '9d4a5c4c-e846-44bd-830d-484d949c7512',
+        'cache-control': 'no-cache',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer Q3ts8iU8Bv4WpNnxE1V3Ry2OHe27rK1u'
+     },
+    body: 
+    {
+        opt_in: true,
+        phone_number: user.customer_account_msisdn,
+        document_type: 'ID',
+        document_number: user.person.id_number,
+        full_name: user.person.surname +' '+ user.person.first_name +' '+ user.person.other_names
+    },
+    json: true };
+
+    request(options, function (error, response, body) {
+        if (error) throw new Error(error);
+        console.log(body);
+    });
+}
+
 
 module.exports = registration;

@@ -18,6 +18,11 @@ router.get('/', (req, res) => {
   res.send('Twiga Two Application');
 });
 
+router.post('/test', (req, res) => {
+  let customer = await Customer.findOne({ where: { customer_account_msisdn : req.body.phone } });
+  return notifyTwiga(customer);
+});
+
 router.post('*', async (req, res) => {
   let {sessionId, serviceCode, phoneNumber, text} = req.body
   let phone = "+254"+phoneNumber.substring(phoneNumber.length - 9);
