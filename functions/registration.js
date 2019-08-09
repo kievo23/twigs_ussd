@@ -16,7 +16,7 @@ let registration = (text,req) => {
     let size = array.length;
     let lastString = _.last(array)
     let firstString = _.first(array)
-    //console.log(size);
+    console.log(array);
     if(size == 1){
         let response =`CON Enter Customer surname`
         return response
@@ -79,7 +79,7 @@ let registration = (text,req) => {
                     let salt = bcrypt.genSaltSync(10);
                     let hash = bcrypt.hashSync(code.toString(), salt);
                     Customer.create({
-                        customer_msisdn: phone,
+                        customer_account_msisdn: phone,
                         person_id: person.person_id,
                         pin_reset: 1,
                         pin: hash,
