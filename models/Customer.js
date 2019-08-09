@@ -60,6 +60,10 @@ const Customer = sequelize.define('customers',{
         type: Sequelize.DOUBLE,
         allowNull: true,
     },
+    twiga_response: {
+        type: Sequelize.TEXT,
+        allowNull: true
+    },
     active: {
         type: Sequelize.BOOLEAN,
         allowNull: true,

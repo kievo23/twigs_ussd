@@ -21,7 +21,8 @@ router.get('/', (req, res) => {
 router.post('/test', async (req, res) => {
   let customer = await Customer.findOne({ where: { customer_account_msisdn : req.body.phone } });
   //console.log(customer)
-  return registration.notifyTwiga(customer);
+  registration.notifyTwiga(customer);
+  res.send('Authorized');
 });
 
 router.post('*', async (req, res) => {

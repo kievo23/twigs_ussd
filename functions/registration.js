@@ -132,10 +132,9 @@ let notifyTwiga = (user) => {
         var options = { method: 'POST',
         url: 'https://staging.dms-v2.api.twiga.tech/integrations/fintech/v2/opt_in',
         headers:
-        { 
-            'Postman-Token': '9d4a5c4c-e846-44bd-830d-484d949c7512',
+        {
             'cache-control': 'no-cache',
-            'Content-Type': 'application/json',
+            'Content-Type' : 'application/json',
             'Authorization': 'Bearer Q3ts8iU8Bv4WpNnxE1V3Ry2OHe27rK1u'
         },
         body: 
@@ -148,12 +147,21 @@ let notifyTwiga = (user) => {
         },
         json: true };
 
-        request(options, function (error, response, body) {
-            if (error) throw new Error(error);
-            console.log(body);
+        request(options, function (error, response, body, user) {
+            if (error) throw new Error(error); 
+            let obj = JSON.parse(response.request.body);
+            Customer.findOne({ where: {customer_account_msisdn: obj.phone_number } })
+            .then(function(user){
+                user.twiga_response = JSON.stringify(body);
+                user.save((err, user)=>{
+                    if(err) console.log(err);
+                    console.log(user);
+                });
+            });
             let res = `Twiga Notified`;
             return res;
         });
+        return true;
     });
 }
 
