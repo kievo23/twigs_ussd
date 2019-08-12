@@ -50,7 +50,9 @@ agentUssd : function agentUssd(agent,text,req){
   let array = _.split(text,'*')
   let lastString = _.last(array)
   let firstString = _.first(array)
-  if(agent.active != 1){
+  if(customer.pin_reset == 1){
+    return resetPassword(agent,text);
+  }else  if(agent.active != 1){
     let response = `CON agent ${agent.person.first_name} your account is not actived`
     return response
   }else if(text == '' || lastString== '00'){

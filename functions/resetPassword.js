@@ -41,10 +41,10 @@ let resetPassword = (customer,text) => {
         if(newPasword == confirmPassword){
             let salt = bcrypt.genSaltSync(10);
             let hash = bcrypt.hashSync(newPasword, salt);
-            customer.ACTIVE = 1
-            customer.PIN_RESET = 0
-            customer.PIN = hash
-            customer.SALT_KEY = salt
+            customer.active = 1
+            customer.pin_reset = 0
+            customer.pin = hash
+            customer.salt_key = salt
             customer.save((err, success) => {
                 if(err){
                     let response =`CON Sorry, Something went wrong`

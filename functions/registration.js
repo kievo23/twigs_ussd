@@ -18,34 +18,34 @@ let registration = (text,req) => {
     let firstString = _.first(array)
     console.log(array);
     if(size == 1){
-        let response =`CON Enter Customer surname`
+        let response = `CON Enter Customer surname`
         return response
     }else if(size == 2){
-        let response =`CON Enter Customer first name`
+        let response = `CON Enter Customer first name`
         return response
     }else if(size == 3){
-        let response =`CON Enter Customer other names`
+        let response = `CON Enter Customer other names`
         return response
     }else if(size == 4){
-        let response =`CON Enter Customer National ID`
+        let response = `CON Enter Customer National ID`
         return response
     }else if(size == 5){
-        let response =`CON Enter Customer Gender e.g. m for male or f for female`
+        let response = `CON Enter Customer Gender e.g. m for male or f for female`
         return response
     }else if(size == 6){
-        let response =`CON Enter Customer Date of Birth e.g. 1979-12-30`
+        let response = `CON Enter Customer Date of Birth e.g. 1979-12-30`
         return response
     }else if(size == 7){
-        let response =`CON Enter Customer Primary Phone No.`
+        let response = `CON Enter Customer Primary Phone No.`
         return response
     }else if(size == 8){
-        let response =`CON Enter Customer Alternative Phone No.`
+        let response = `CON Enter Customer Alternative Phone No.`
         return response
     }else if(size == 9){
-        let response =`CON Enter Physical location.`
+        let response = `CON Enter Physical location.`
         return response
     }else if(size == 10){
-        let response =`CON Congratulations, Register the client?. 
+        let response = `CON Congratulations, Register the client?. 
         1. Complete registration`
         return response
     }else if(size == 11){
