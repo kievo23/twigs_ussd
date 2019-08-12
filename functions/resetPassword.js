@@ -22,7 +22,7 @@ let resetPassword = (customer,text) => {
         return response
     }else if(size == 1 && text != ""){
         console.log(firstString)
-        let rst = bcrypt.compareSync(firstString, customer.PIN);
+        let rst = bcrypt.compareSync(firstString, customer.pin);
         if(rst != 1){
             let response =`CON You entered a wrong password
             00. Go back to the main menu`
