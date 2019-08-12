@@ -17,7 +17,8 @@ let resetPassword = (customer,text) => {
     let firstString = _.first(array)
     console.log(size);
     if(size == 1 && text == ""){
-        let response =`CON Enter your one time password`
+        let response =`CON Welcome to M-Weza Platform
+        Enter your one time password`
         return response
     }else if(size == 1 && text != ""){
         console.log(firstString)
