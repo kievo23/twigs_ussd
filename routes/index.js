@@ -93,7 +93,7 @@ customerUssd : function customerUssd(customer,text,req){
     // Business logic for first level response
     // BUSINESS LOGIC FOR
     console.log(array[0])
-    let rst = bcrypt.compareSync(array[0], customer.PIN);
+    let rst = bcrypt.compareSync(array[0], customer.pin);
     if(rst == true){
       return customerModule(customer,text)
     }else{
