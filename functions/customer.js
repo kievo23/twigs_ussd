@@ -17,7 +17,7 @@ let CustomerModule = (customer,text) => {
     let firstString = _.first(array)
     console.log(size);
     if(size == 1){
-        let response =`CON Main Menu
+        let response =`CON Main Menu your loan balance is ${customer.previous_account_balance}
         1. Active Deliveries
         2. Pending Deliveries
         3. Make Payment
