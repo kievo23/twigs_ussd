@@ -9,7 +9,7 @@ const Customer = require('../models/Customer');
 //SMS
 const sendSMS = require('../functions/sendSMS');
 
-let resetPassword = (customer,text) => {
+let resetPassword = (customer,text,req,res) => {
     
     let array = _.split(text,'*');
     let size = array.length;
@@ -19,21 +19,21 @@ let resetPassword = (customer,text) => {
     if(size == 1 && text == ""){
         let response =`CON Welcome to M-Weza Platform
         Enter your one time password`
-        return response
+        res.send(response)
     }else if(size == 1 && text != ""){
         console.log(firstString)
         let rst = bcrypt.compareSync(firstString, customer.pin);
         if(rst != 1){
             let response =`CON You entered a wrong password
             00. Go back to the main menu`
-            return response
+            res.send(response)
         }else{
             let response =`CON Enter your new password (four digits)`
-            return response
+            res.send(response)
         }
     }else if(size == 2){
         let response =`CON Confirm your new password (four digits)`
-        return response 
+        res.send(response)
     }else if(size == 3){
         let confirmPassword = array[2]
         let newPasword = array[1]
@@ -49,18 +49,18 @@ let resetPassword = (customer,text) => {
             customer.save((err, success) => {
                 if(err){
                     let response =`CON Sorry, Something went wrong`
-                    return response
+                    res.send(response)
                 }else{
                     let response =`CON Congratulations, you have activated your account`
-                    return response
+                    res.send(response)
                 }
             })
             let response =`END Congratulations, you have activated your account`
-            return response
+            res.send(response)
         }else{
             let response =`CON Your passwords dont match.
             00. Retry`
-            return response
+            res.send(response)
         }
         console.log(text)
     }

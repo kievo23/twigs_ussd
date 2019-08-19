@@ -38,10 +38,10 @@ router.post('*', async (req, res) => {
     res.send(response);
     res.end();
   }else if(agent){
-    res.send(agentUssd(agent,text,req));
+    return agentUssd(agent,text,req);
   }
   else if(customer){
-    res.send(customerUssd(customer,text,req));
+    return customerUssd(customer,text,req,res);
   }
 });
 
@@ -54,58 +54,58 @@ agentUssd : function agentUssd(agent,text,req){
     return resetPassword(agent,text);
   }else  if(agent.active != 1){
     let response = `CON agent ${agent.person.first_name} your account is not actived`
-    return response
+    res.send(response)
   }else if(text == '' || lastString== '00'){
     let response = `CON Welcome agent ${agent.person.first_name} your account is ready!!
     1. Register Customer
     2. Activate Customer
     3. Reset a Customer Password`
-    return response
+    res.send(response)
   }else if(firstString == '1'){
     return registration.registration(text,req)
   }else if(text == '2'){
     let response =`CON Enter Customer Number`
-    return response
+    res.send(response)
   }else if(text == '3'){
     let response =`CON Enter Customer Number`
-    return response
+    res.send(response)
   }
 }
 
 
-customerUssd : function customerUssd(customer,text,req){
+customerUssd : function customerUssd(customer,text,req,res){
   let array = _.split(text,'*')
   let lastString = _.last(array)
   let firstString = _.first(array)
   if(customer.pin_reset == 1) {
-    return resetPassword(customer,text);
+    return resetPassword(customer,text,req,res);
   }
   else if(customer.active != 1) {
     let response = `END ${customer.person.first_name} your account is not actived`
-    return response
+    res.send(response)
   }else if (text == '' || lastString== '00') {
     // This is the first request. Note how we start the response with CON
     let response = `CON Welcome ${customer.person.first_name} to Twiga Payments Platform
     Input your password to proceed`
     //console.log(req.session);
-    return response
+    res.send(response)
   } else if (firstString.length == 4) {
     // Business logic for first level response
     // BUSINESS LOGIC FOR
-    console.log(array[0])
+    //console.log(array[0])
     let rst = bcrypt.compareSync(array[0], customer.pin);
     if(rst == true){
-      return customerModule(customer,text)
+      return customerModule(customer,text,req,res)
     }else{
       let response = `CON Wrong password.
-      1. 00 go back to previous menu`
-      return response
-    }    
+      00. go back to previous menu`
+      res.send(response)
+    }   
   } else {
     let response = `CON Invalid Input
     00. Main Menu
     CANCEL. End USSD`
-    return response
+    res.send(response)
   }
 }
 
