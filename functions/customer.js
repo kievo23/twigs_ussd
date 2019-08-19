@@ -41,7 +41,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
             res.send(response);
         }else if(lastString == 4){
             //Check loan Limit
-            let response = `CON Your loan limit is 5000`
+            let response = `CON Your loan limit is 5000 KES`
             res.send(response);
         }
     }
