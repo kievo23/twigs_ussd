@@ -17,7 +17,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
     let lastString = _.last(array)
     let firstString = _.first(array)
     console.log(array);
-    if(size == 1){
+    if(size == 1 || lastString == 0){
         console.log("Main Menu");
         let response =`CON Main Menu your loan balance is 
         1. Active Deliveries
@@ -29,19 +29,23 @@ let CustomerModule =  async ( customer, text, req, res) => {
         if(lastString == 1){
             //Active Deliveries
             //console.log(deliveries);
-            let response = `CON You have an unpaid delivery of ${deliveries.amount} KES`
+            let response = `CON You have an unpaid delivery of ${deliveries.amount} KES
+            0. To go back to the main menu`
             res.send(response);
         }else if(lastString == 2){
             //Pending Deliveries
-            let response = `CON You have dont have pending deliveries`
+            let response = `CON You have dont have pending deliveries
+            0. To go back to the main menu`
             res.send(response);
         }else if(lastString == 3){
             //Make Payment
-            let response = `CON Wait for the MPesa prompt`
+            let response = `CON Wait for the MPesa prompt
+            0. To go back to the main menu`
             res.send(response);
         }else if(lastString == 4){
             //Check loan Limit
-            let response = `CON Your loan limit is 5000 KES`
+            let response = `CON Your loan limit is 5000 KES
+            0. To go back to the main menu`
             res.send(response);
         }
     }
