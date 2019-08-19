@@ -34,7 +34,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
             res.send(response);
         }else if(lastString == 2){
             //Pending Deliveries
-            let response = `CON You have dont have pending deliveries
+            let response = `CON You dont have pending deliveries
             0. To go back to the main menu`
             res.send(response);
         }else if(lastString == 3){

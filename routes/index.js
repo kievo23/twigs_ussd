@@ -38,7 +38,7 @@ router.post('*', async (req, res) => {
     res.send(response);
     res.end();
   }else if(agent){
-    return agentUssd(agent,text,req);
+    return agentUssd(agent,text,req, res);
   }
   else if(customer){
     return customerUssd(customer,text,req,res);
@@ -46,7 +46,7 @@ router.post('*', async (req, res) => {
 });
 
 
-agentUssd : function agentUssd(agent,text,req){
+agentUssd : function agentUssd(agent,text,req, res){
   let array = _.split(text,'*')
   let lastString = _.last(array)
   let firstString = _.first(array)
