@@ -24,11 +24,11 @@ let CustomerModule =  async ( customer, text, req, res) => {
         2. Pending Deliveries
         3. Make Payment
         4. Check Loan Limit`
-        return response
+        res.send(response)
     }else if(size == 2){
         if(lastString == 1){
             //Active Deliveries
-            console.log(deliveries);
+            //console.log(deliveries);
             let response = `CON You have an unpaid delivery of ${deliveries.amount} KES`
             res.send(response);
         }else if(lastString == 2){
