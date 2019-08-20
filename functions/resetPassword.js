@@ -37,12 +37,9 @@ let resetPassword = (customer,text,req,res) => {
     }else if(size == 3){
         let confirmPassword = array[2]
         let newPasword = array[1]
-        console.log(confirmPassword)
-        console.log(newPasword)
         if(newPasword == confirmPassword){
             let salt = bcrypt.genSaltSync(10);
             let hash = bcrypt.hashSync(newPasword, salt);
-            customer.active = 1
             customer.pin_reset = 0
             customer.pin = hash
             customer.salt_key = salt

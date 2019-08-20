@@ -8,6 +8,7 @@ let cookieSession = require('cookie-session');
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
 let agentRouter = require('./routes/agent');
+let testRouter = require('./routes/test');
 const app = express()
 
 // view engine setup
@@ -36,8 +37,10 @@ app.use(function (req, res, next) {
   next();
 })
 
+
+app.use('/test', testRouter);
 app.use('/', indexRouter);
-app.use('/agent', agentRouter);
+//app.use('/agent', agentRouter);
 
 // error handler
 app.use(function(err, req, res, next) {

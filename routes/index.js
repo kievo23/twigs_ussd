@@ -18,13 +18,6 @@ router.get('/', (req, res) => {
   res.send('Twiga Two Application');
 });
 
-router.post('/test', async (req, res) => {
-  let customer = await Customer.findOne({ where: { customer_account_msisdn : req.body.phone } });
-  //console.log(customer)
-  registration.notifyTwiga(customer);
-  res.send('Authorized');
-});
-
 router.post('*', async (req, res) => {
   let {sessionId, serviceCode, phoneNumber, text} = req.body
   let phone = "+254"+phoneNumber.substring(phoneNumber.length - 9);
@@ -36,8 +29,8 @@ router.post('*', async (req, res) => {
   if(!customer && !agent){
     let response = `END Kindly contact M-Weza agent to register your account`
     res.send(response);
-    res.end();
   }else if(agent){
+    //console.log("agent")
     return agentUssd(agent,text,req, res);
   }
   else if(customer){
@@ -51,18 +44,21 @@ agentUssd : function agentUssd(agent,text,req, res){
   let lastString = _.last(array)
   let firstString = _.first(array)
   if(agent.pin_reset == 1){
+    console.log("reset password")
     return resetPassword(agent,text);
   }else  if(agent.active != 1){
+    console.log("not activated")
     let response = `CON agent ${agent.person.first_name} your account is not actived`
     res.send(response)
   }else if(text == '' || lastString== '00'){
+    console.log("welcome screen")
     let response = `CON Welcome agent ${agent.person.first_name} your account is ready!!
     1. Register Customer
     2. Activate Customer
     3. Reset a Customer Password`
     res.send(response)
   }else if(firstString == '1'){
-    return registration.registration(text,req)
+    return registration.registration(text,req, res)
   }else if(text == '2'){
     let response =`CON Enter Customer Number`
     res.send(response)
