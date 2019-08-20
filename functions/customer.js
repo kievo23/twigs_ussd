@@ -8,6 +8,7 @@ const Agent = require('../models/Sales_Agent');
 const Customer = require('../models/Customer');
 const Delivery = require('../models/Delivery_Notification');
 const Checkout = require('../models/Checkout');
+const LoanAccount = require('../models/Loan_Account');
 //SMS
 const sendSMS = require('../functions/sendSMS');
 const mpesaAPI = require('../functions/mpesa');
@@ -20,6 +21,12 @@ let CustomerModule =  async ( customer, text, req, res) => {
     arraylength = textnew.length - 1
     //console.log(textnew.length)
     let deliveries = await Delivery.findOne({ where: { status : 0 } })
+    let loans = await LoanAccount.findAll({ where: { loan_status : 0 } })
+    let balance = 0
+    for (index = 0; index < loans.length; ++index) {
+        balance += loans[index].loan_balance
+        console.log(loans[index].loan_balance);
+    }
     let array = _.split(textnew[arraylength],'*');
     let size = array.length;
     let lastString = _.last(array)
@@ -28,9 +35,8 @@ let CustomerModule =  async ( customer, text, req, res) => {
     console.log(array)
     if(size == 1 || lastString == 0){
         console.log("Main Menu");
-        let response = `CON Main Menu your loan balance is 
+        let response = `CON Welcome, Your loan balance is ${balance} KES
         1. Active Deliveries
-        2. Pending Deliveries
         3. Make Payment full Payment
         4. Make Partial Payment
         5. Check Loan Limit`
