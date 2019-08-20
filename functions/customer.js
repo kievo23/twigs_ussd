@@ -79,7 +79,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
         const accountRef = Math.random().toString(35).substr(2, 7)
         //res.send(JSON.stringify(result))
         let result = await mpesaAPI.lipaNaMpesaOnline(testMSISDN, amount, config.mpesa.STKCallbackURL + '/lipanampesa/success', accountRef)
-        //console.log(result.data)
+        console.log(result.data)
         checkoutFunc(result.data,customer.customer_account_msisdn,amount,config.mpesa.ShortCode)
         let response = `CON Wait for the MPesa prompt
             #. To go back to the main menu`
