@@ -37,9 +37,9 @@ let CustomerModule =  async ( customer, text, req, res) => {
         console.log("Main Menu");
         let response = `CON Welcome, Your loan balance is ${balance} KES
         1. Active Deliveries
-        3. Make Payment full Payment
+        3. Make Payment in Full
         4. Make Partial Payment
-        5. Check Loan Limit`
+        5. Check LoanLimit`
         res.send(response)
     }else if(size == 2){
         if(lastString == 1){
@@ -62,8 +62,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
             //res.send(JSON.stringify(result))
             let result = await mpesaAPI.lipaNaMpesaOnline(testMSISDN, amount, config.mpesa.STKCallbackURL + '/lipanampesa/success', accountRef)
             checkoutFunc(result.data,customer.customer_account_msisdn,amount,config.mpesa.ShortCode)
-            let response = `END Wait for the MPesa prompt
-            #. To go back to the main menu`
+            let response = `END Wait for the MPesa prompt`
             res.send(response)
         }else if(lastString == 4){
             //Check loan Limit
@@ -88,8 +87,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
         console.log(result.data)
         let rcd = checkoutFunc(result.data,customer.customer_account_msisdn,amount,config.mpesa.ShortCode)
         console.log(rcd)
-        let response = `END Wait for the MPesa prompt
-            #. To go back to the main menu`
+        let response = `END Wait for the MPesa prompt`
         res.send(response);
     }
 }
