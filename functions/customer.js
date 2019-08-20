@@ -56,7 +56,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
             //res.send(JSON.stringify(result))
             let result = await mpesaAPI.lipaNaMpesaOnline(testMSISDN, amount, config.mpesa.STKCallbackURL + '/lipanampesa/success', accountRef)
             checkoutFunc(result.data,customer.customer_account_msisdn,amount,config.mpesa.ShortCode)
-            let response = `CON Wait for the MPesa prompt
+            let response = `END Wait for the MPesa prompt
             #. To go back to the main menu`
             res.send(response)
         }else if(lastString == 4){
@@ -82,7 +82,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
         console.log(result.data)
         let rcd = checkoutFunc(result.data,customer.customer_account_msisdn,amount,config.mpesa.ShortCode)
         console.log(rcd)
-        let response = `CON Wait for the MPesa prompt
+        let response = `END Wait for the MPesa prompt
             #. To go back to the main menu`
         res.send(response);
     }
