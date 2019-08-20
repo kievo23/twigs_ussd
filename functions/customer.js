@@ -80,7 +80,8 @@ let CustomerModule =  async ( customer, text, req, res) => {
         //res.send(JSON.stringify(result))
         let result = await mpesaAPI.lipaNaMpesaOnline(testMSISDN, amount, config.mpesa.STKCallbackURL + '/lipanampesa/success', accountRef)
         console.log(result.data)
-        checkoutFunc(result.data,customer.customer_account_msisdn,amount,config.mpesa.ShortCode)
+        let rcd = checkoutFunc(result.data,customer.customer_account_msisdn,amount,config.mpesa.ShortCode)
+        console.log(rcd)
         let response = `CON Wait for the MPesa prompt
             #. To go back to the main menu`
         res.send(response);
@@ -97,7 +98,7 @@ let checkoutFunc = async (json, phone, amount, shortcode ) =>{
         msisdn: phone,
         amount: amount,
         payer_number: phone,
-        paybill: config.mpesa.ShortCode
+        paybill: shortcode
     })
     return rst
 }
