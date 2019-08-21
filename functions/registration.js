@@ -86,13 +86,17 @@ let registration = async(text,req, res) => {
                     pin: hash,
                     salt_key: salt
                 });
+                notifyTwiga(customer);
+                sendSMS(phone,"Your one time password is: "+code);
+                let response =`END Registration successful!!`
+                res.send(response)
+            }else{
+                let response =`END Client is already registered!!`
+                res.send(response)
             }
             // let response =`CON Registration successful!!`
             // return response
-            notifyTwiga(customer);
-            sendSMS(phone,"Your one time password is: "+code);
-            let response =`END Registration successful!!`
-            res.send(response)
+            
         }else{
             let customer = await Customer.findOne({ where: {customer_account_msisdn: phone} })
             if(!customer){
