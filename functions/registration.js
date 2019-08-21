@@ -10,7 +10,7 @@ const Customer = require('../models/Customer');
 //SMS
 const sendSMS = require('../functions/sendSMS');
 
-let registration = (text,req, res) => {
+let registration = async(text,req, res) => {
     
     let array = _.split(text,'*');
     let size = array.length;
@@ -58,66 +58,64 @@ let registration = (text,req, res) => {
         let phone = "+254"+last(array[7], 9);
         let alternative_phone = "+254"+last(array[8], 9);;
         let location = array[9];
-        Person.findOne({ where: {id_number: id} })
-        .then(person => {
+        
+        let person = await Person.findOne({ where: {id_number: id} })
             // project will be the first entry of the Projects table with the title 'aProject' || null
             //console.log(person);
-            if(!person){
-                let person = Person.create({
-                    surname: surname,
-                    first_name: firstname,
-                    other_names: othernames,
-                    gender: gender,
-                    date_of_birth: dob,
-                    id_number: id,
-                    primary_msisdn: phone,
-                    alternate_msisdn: alternative_phone,
-                    physical_location: location,
-                }).then((person) => {
-                    let code = Math.floor(1000 + Math.random() * 9000);
-                    let salt = bcrypt.genSaltSync(10);
-                    let hash = bcrypt.hashSync(code.toString(), salt);
-                    Customer.create({
-                        customer_account_msisdn: phone,
-                        person_id: person.id,
-                        pin_reset: 1,
-                        pin: hash,
-                        salt_key: salt
-                    }).then((customer) => {
-                        // let response =`CON Registration successful!!`
-                        // return response
-                        notifyTwiga(customer);
-                        sendSMS(phone,"Your one time password is: "+code);
-                        let response =`END Registration successful!!`
-                        res.send(response)
-                    });
+        if(!person){
+            let person = await Person.create({
+                surname: surname,
+                first_name: firstname,
+                other_names: othernames,
+                gender: gender,
+                date_of_birth: dob,
+                id_number: id,
+                primary_msisdn: phone,
+                alternate_msisdn: alternative_phone,
+                physical_location: location,
+            })
+            let code = Math.floor(1000 + Math.random() * 9000);
+            let salt = bcrypt.genSaltSync(10);
+            let hash = bcrypt.hashSync(code.toString(), salt);
+            let customer = await Customer.findOne({ include: [Person], where: {customer_account_msisdn: phone} })
+            if(!customer){
+                customer = await Customer.create({
+                    customer_account_msisdn: phone,
+                    person_id: person.id,
+                    pin_reset: 1,
+                    pin: hash,
+                    salt_key: salt
                 });
-            }else{
-                Customer.findOne({ where: {customer_account_msisdn: phone} })
-                .then((customer) => {
-                    if(!customer){
-                        let code = Math.floor(1000 + Math.random() * 9000);
-                        let salt = bcrypt.genSaltSync(10);
-                        let hash = bcrypt.hashSync(code.toString(), salt);
-                        let customer = Customer.create({
-                            customer_account_msisdn: phone,
-                            person_id: person.person_id,
-                            pin_reset: 1,
-                            pin: hash,
-                            salt_key: salt
-                        }).then((customer) => {
-                            sendSMS(phone,"Your one time password is: "+code);
-                            notifyTwiga(customer);
-                            let response =`END Registration successful!!`
-                            res.send(response)
-                        }); 
-                    }else{
-                        let response =`END Client is already registered!!`
-                        res.send(response)
-                    }
-                })
             }
-        });          
+            // let response =`CON Registration successful!!`
+            // return response
+            notifyTwiga(customer);
+            sendSMS(phone,"Your one time password is: "+code);
+            let response =`END Registration successful!!`
+            res.send(response)
+        }else{
+            let customer = await Customer.findOne({ where: {customer_account_msisdn: phone} })
+            if(!customer){
+                let code = Math.floor(1000 + Math.random() * 9000);
+                let salt = bcrypt.genSaltSync(10);
+                let hash = bcrypt.hashSync(code.toString(), salt);
+                let customer = Customer.create({
+                    customer_account_msisdn: phone,
+                    person_id: person.id,
+                    pin_reset: 1,
+                    pin: hash,
+                    salt_key: salt
+                }).then((customer) => {
+                    sendSMS(phone,"Your one time password is: "+code);
+                    notifyTwiga(customer);
+                    let response =`END Registration successful!!`
+                    res.send(response)
+                }); 
+            }else{
+                let response =`END Client is already registered!!`
+                res.send(response)
+            }
+        }       
 
         let response =`END Registration successful!!`
         return response
