@@ -126,7 +126,7 @@ let registration = (text,req, res) => {
 
 let notifyTwiga = (user) => {
     Customer.findOne({ include: [Person], where: {customer_account_msisdn: user.customer_account_msisdn} })
-    .then(function(user){
+    .then(function(customer){
         if(customer){
             var options = { method: 'POST',
             url: 'https://staging.dms-v2.api.twiga.tech/integrations/fintech/v2/opt_in',
