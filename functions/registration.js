@@ -55,8 +55,8 @@ let registration = (text,req, res) => {
         let id = array[4];
         let gender = array[5];
         let dob = array[6];
-        let phone = "+254"+last(array[7], 9);;
-        let alternative_phone = array[8];
+        let phone = "+254"+last(array[7], 9);
+        let alternative_phone = "+254"+last(array[8], 9);;
         let location = array[9];
         Person.findOne({ where: {id_number: id} })
         .then(person => {
