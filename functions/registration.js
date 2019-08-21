@@ -99,18 +99,17 @@ let registration = async(text,req, res) => {
                 let code = Math.floor(1000 + Math.random() * 9000);
                 let salt = bcrypt.genSaltSync(10);
                 let hash = bcrypt.hashSync(code.toString(), salt);
-                let customer = Customer.create({
+                let customer = await Customer.create({
                     customer_account_msisdn: phone,
                     person_id: person.id,
                     pin_reset: 1,
                     pin: hash,
                     salt_key: salt
-                }).then((customer) => {
-                    sendSMS(phone,"Your one time password is: "+code);
-                    notifyTwiga(customer);
-                    let response =`END Registration successful!!`
-                    res.send(response)
-                }); 
+                })
+                sendSMS(phone,"Your one time password is: "+code);
+                notifyTwiga(customer);
+                let response =`END Registration successful!!`
+                res.send(response)
             }else{
                 let response =`END Client is already registered!!`
                 res.send(response)

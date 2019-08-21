@@ -45,7 +45,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
         if(lastString == 1){
             //Active Deliveries
             //console.log(deliveries);
-            let response = `CON You have an unpaid delivery of ${deliveries.amount} KES
+            let response = `CON You have an unpaid delivery of ${balance} KES
             #. To go back to the main menu`
             res.send(response);
         }else if(lastString == 2){
@@ -57,7 +57,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
             //Make Payment
             const testMSISDN = customer.customer_account_msisdn.substring(customer.customer_account_msisdn.length - 12)
             //console.log(testMSISDN)
-            const amount = 10
+            const amount = balance
             const accountRef = Math.random().toString(35).substr(2, 7)
             //res.send(JSON.stringify(result))
             let result = await mpesaAPI.lipaNaMpesaOnline(testMSISDN, amount, config.mpesa.STKCallbackURL + '/lipanampesa/success', accountRef)
