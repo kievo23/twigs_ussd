@@ -37,9 +37,9 @@ let CustomerModule =  async ( customer, text, req, res) => {
         console.log("Main Menu");
         let response = `CON Welcome, Your loan balance is ${balance} KES
         1. Active Deliveries
-        3. Make Payment in Full
-        4. Make Partial Payment
-        5. Check LoanLimit`
+        2. Make Payment in Full
+        3. Make Partial Payment
+        4. Check LoanLimit`
         res.send(response)
     }else if(size == 2){
         if(lastString == 1){
@@ -49,11 +49,6 @@ let CustomerModule =  async ( customer, text, req, res) => {
             #. To go back to the main menu`
             res.send(response);
         }else if(lastString == 2){
-            //Pending Deliveries
-            let response = `CON You dont have pending deliveries
-            #. To go back to the main menu`
-            res.send(response);
-        }else if(lastString == 3){
             //Make Payment
             const testMSISDN = customer.customer_account_msisdn.substring(customer.customer_account_msisdn.length - 12)
             //console.log(testMSISDN)
@@ -64,13 +59,13 @@ let CustomerModule =  async ( customer, text, req, res) => {
             checkoutFunc(result.data,customer.customer_account_msisdn,amount,config.mpesa.ShortCode)
             let response = `END Wait for the MPesa prompt`
             res.send(response)
-        }else if(lastString == 4){
+        }else if(lastString == 3){
             //Check loan Limit
             let response = `CON Input Amount To Pay
             #. To go back to the main menu`
             res.send(response);
         }
-        else if(lastString == 5){
+        else if(lastString == 4){
             //Check loan Limit
             let response = `CON Your loan limit is ${customer.account_limit} KES
             #. To go back to the main menu`
