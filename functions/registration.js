@@ -128,6 +128,8 @@ let registration = async(text,req, res) => {
 let notifyTwiga = (user) => {
     Customer.findOne({ include: [Person], where: {customer_account_msisdn: user.customer_account_msisdn} })
     .then(function(customer){
+        console.log("customer")
+        console.log(customer)
         if(customer){
             var options = { method: 'POST',
             url: 'https://staging.dms-v2.api.twiga.tech/integrations/fintech/v2/opt_in',
@@ -140,10 +142,10 @@ let notifyTwiga = (user) => {
             body: 
             {
                 opt_in: true,
-                phone_number: user.customer_account_msisdn,
+                phone_number: customer.customer_account_msisdn,
                 document_type: 'ID',
-                document_number: user.person.id_number,
-                full_name: user.person.surname +' '+ user.person.first_name +' '+ user.person.other_names
+                document_number: customer.person.id_number,
+                full_name: customer.person.surname +' '+ customer.person.first_name +' '+ customer.person.other_names
             },
             json: true };
 
