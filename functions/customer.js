@@ -30,7 +30,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
         balance += loans[index].loan_balance
         console.log(loans[index].loan_balance)
         count = count + 1
-        dates = dates + loans[index].createdAt+", "
+        dates = dates + loans[index].createdAt.toISOString().replace(/T/, ' ').replace(/\..+/, '')+", "
     }
     let array = _.split(textnew[arraylength],'*');
     let size = array.length;
