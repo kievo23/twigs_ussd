@@ -39,10 +39,15 @@ router.post('*', async (req, res) => {
 });
 
 
-agentUssd : function agentUssd(agent,text,req, res){
-  let array = _.split(text,'*')
+let agentUssd =  async (agent,text,req, res)=>{
+  let textnew = _.split(text,'#')
+  arraylength = textnew.length - 1
+  let array = _.split(textnew[arraylength],'*');
+  let size = array.length;
+  //let array = _.split(text,'*')
   let lastString = _.last(array)
   let firstString = _.first(array)
+  console.log(size)
   if(agent.pin_reset == 1){
     console.log("reset password")
     return resetPassword(agent,text);
@@ -50,21 +55,36 @@ agentUssd : function agentUssd(agent,text,req, res){
     console.log("not activated")
     let response = `CON agent ${agent.person.first_name} your account is not actived`
     res.send(response)
-  }else if(text == '' || lastString== '00'){
+  }else if(text == '' || lastString== '##'){
     console.log("welcome screen")
     let response = `CON Welcome agent ${agent.person.first_name} your account is ready!!
     1. Register Customer
-    2. Activate Customer
-    3. Reset a Customer Password`
+    2. Reset a Customer Password`
     res.send(response)
   }else if(firstString == '1'){
     return registration.registration(text,req, res)
-  }else if(text == '2'){
+  }else if(firstString == '2'){
     let response =`CON Enter Customer Number`
     res.send(response)
-  }else if(text == '3'){
-    let response =`CON Enter Customer Number`
-    res.send(response)
+  }else if(size == 2){
+    console.log(array)
+    if(array[1] == '3'){
+      
+    }else if(array[1]== '2'){
+      let code = Math.floor(1000 + Math.random() * 9000);
+      let salt = bcrypt.genSaltSync(10);
+      let hash = bcrypt.hashSync(code.toString(), salt);
+      let phone = "+254"+last(lastString.trim(), 9);
+      let customer = await Customer.findOne({ include: [Person], where: {customer_account_msisdn: phone} })
+      customer.pin = hash
+      customer.salt_key = salt
+      customer.pin_reset = 1
+      customer.save((err, user)=>{
+        if(err) console.log(err);
+        console.log(user);
+      });
+      sendSMS(phone,"Your one time password is: "+code);
+    }
   }
 }
 

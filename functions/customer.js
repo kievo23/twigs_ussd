@@ -23,9 +23,13 @@ let CustomerModule =  async ( customer, text, req, res) => {
     let deliveries = await Delivery.findOne({ where: { status : 0 } })
     let loans = await LoanAccount.findAll({ where: { loan_status : 0 } })
     let balance = 0
+    let count = 0
+    let dates = ''
     for (index = 0; index < loans.length; ++index) {
         balance += loans[index].loan_balance
-        console.log(loans[index].loan_balance);
+        console.log(loans[index].loan_balance)
+        count = count + 1
+        dates = dates + loans[index].created_at+", "
     }
     let array = _.split(textnew[arraylength],'*');
     let size = array.length;
@@ -45,7 +49,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
         if(lastString == 1){
             //Active Deliveries
             //console.log(deliveries);
-            let response = `CON You have an unpaid delivery of ${balance} KES
+            let response = `CON Your ${count} unpaid delivery of ${balance} KES done on ${dates}            
             #. To go back to the main menu`
             res.send(response);
         }else if(lastString == 2){
