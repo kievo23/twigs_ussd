@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
+const last = require('voca/last');
 
 const Person = require('../models/Person');
 const Agent = require('../models/Sales_Agent');
@@ -47,7 +48,7 @@ let agentUssd =  async (agent,text,req, res)=>{
   //let array = _.split(text,'*')
   let lastString = _.last(array)
   let firstString = _.first(array)
-  console.log(size)
+  console.log(array)
   if(agent.pin_reset == 1){
     console.log("reset password")
     return resetPassword(agent,text);
@@ -63,14 +64,12 @@ let agentUssd =  async (agent,text,req, res)=>{
     res.send(response)
   }else if(firstString == '1'){
     return registration.registration(text,req, res)
-  }else if(firstString == '2'){
+  }else if(firstString == '2' && size == 1){
     let response =`CON Enter Customer Number`
     res.send(response)
   }else if(size == 2){
     console.log(array)
-    if(array[1] == '3'){
-      
-    }else if(array[1]== '2'){
+    if(array[0]== '2'){
       let code = Math.floor(1000 + Math.random() * 9000);
       let salt = bcrypt.genSaltSync(10);
       let hash = bcrypt.hashSync(code.toString(), salt);
@@ -84,6 +83,8 @@ let agentUssd =  async (agent,text,req, res)=>{
         console.log(user);
       });
       sendSMS(phone,"Your one time password is: "+code);
+      let response =`END Customer is reset successfully`
+      res.send(response)
     }
   }
 }
