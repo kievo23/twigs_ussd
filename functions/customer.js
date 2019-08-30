@@ -25,6 +25,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
     let balance = 0
     let count = 0
     let dates = ''
+    console.log(deliveries)
     for (index = 0; index < loans.length; ++index) {
         balance += loans[index].loan_balance
         console.log(loans[index].loan_balance)
