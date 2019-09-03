@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const express = require('express');
 const bcrypt = require('bcryptjs');
+const request = require("request");
 
 //MODELS
 const Person = require('../models/Person');
@@ -20,7 +21,11 @@ let CustomerModule =  async ( customer, text, req, res) => {
     let textnew = _.split(text,'#')
     arraylength = textnew.length - 1
     //console.log(textnew.length)
-    let deliveries = await Delivery.findOne({ where: { status : 0 } })
+    let delivery = await Delivery.findOne({ 
+        where: { status : 0, customer_id : customer.id },
+        order: [ [ 'createdAt', 'DESC' ]],
+    })
+
     let loans = await LoanAccount.findAll({ where: { loan_status : 0 } })
     let balance = 0
     let count = 0
@@ -30,7 +35,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
         balance += loans[index].loan_balance
         console.log(loans[index].loan_balance)
         count = count + 1
-        dates = dates + loans[index].createdAt.toISOString().replace(/T/, ' ').replace(/\..+/, '')+", "
+        dates = dates + loans[index].createdAt+", "
     }
     let array = _.split(textnew[arraylength],'*');
     let size = array.length;
@@ -38,27 +43,37 @@ let CustomerModule =  async ( customer, text, req, res) => {
     let firstString = _.first(array)
     console.log(textnew)
     console.log(array)
-    if(size == 1 || lastString == 0){
-        console.log("Main Menu");
-        let response = `CON Welcome, Your loan balance is ${balance} KES
-        1. Active Deliveries
-        2. Make Payment in Full
-        3. Make Partial Payment
-        4. Check LoanLimit`
-        res.send(response)
+    if(firstString == 1 || size == 1){
+        //console.log("Main Menu");
+        //var m = moment(dates)
+        console.log(dates)
+            let response = `CON Welcome, Your loan balance is ${balance} KES
+            1. Active Deliveries
+            2. Make Payment in Full
+            3. Make Partial Payment
+            4. Check LoanLimit`
+            res.send(response)
     }else if(size == 2){
         if(lastString == 1){
             //Active Deliveries
             //console.log(deliveries);
-            let response = `CON Your ${count} unpaid delivery of KES: ${balance} done on ${dates}            
-            #. To go back to the main menu`
+            let response = ``
+            if(delivery){
+                response = `CON You have ${count} unpaid delivery of KES: ${balance}  
+            1. To take a loan of KES: ${delivery.amount} on this ${delivery.receipt_number} delivery done on ${delivery.createdAt}          
+            #. Back to main menu`
+            }else{
+                response = `CON You have ${count} unpaid delivery of KES: ${balance}         
+            #. Back to main menu`
+            }            
             res.send(response);
         }else if(lastString == 2){
             //Make Payment
             const testMSISDN = customer.customer_account_msisdn.substring(customer.customer_account_msisdn.length - 12)
             //console.log(testMSISDN)
             const amount = balance
-            const accountRef = Math.random().toString(35).substr(2, 7)
+            //const accountRef = Math.random().toString(35).substr(2, 7)
+            const accountRef = testMSISDN
             //res.send(JSON.stringify(result))
             let result = await mpesaAPI.lipaNaMpesaOnline(testMSISDN, amount, config.mpesa.STKCallbackURL + '/lipanampesa/success', accountRef)
             checkoutFunc(result.data,customer.customer_account_msisdn,amount,config.mpesa.ShortCode)
@@ -78,17 +93,49 @@ let CustomerModule =  async ( customer, text, req, res) => {
         }
     }else if(size == 3){
         //Make Payment
-        const testMSISDN = customer.customer_account_msisdn.substring(customer.customer_account_msisdn.length - 12)
-        //console.log(testMSISDN)
-        const amount = lastString
-        const accountRef = Math.random().toString(35).substr(2, 7)
-        //res.send(JSON.stringify(result))
-        let result = await mpesaAPI.lipaNaMpesaOnline(testMSISDN, amount, config.mpesa.STKCallbackURL + '/lipanampesa/success', accountRef)
-        console.log(result.data)
-        let rcd = checkoutFunc(result.data,customer.customer_account_msisdn,amount,config.mpesa.ShortCode)
-        console.log(rcd)
-        let response = `END Wait for the MPesa prompt`
-        res.send(response);
+        if(lastString == 1){
+            //Make the delivery a loan entry
+            let loan = await LoanAccount.create({
+                'customer_account_id' : customer.id,
+                'delivery_id' : delivery.id,
+                'principal_amount' : delivery.amount,
+                'interest_charged' : 25.00,
+                'loan_amount' : delivery.amount + 25.00,
+                'loan_balance' : delivery.amount + 25.00,
+                'loan_penalty' : 0.00,
+                'loan_status' : 0
+            });
+
+            //Send loan confirmation
+            let loanedAmount = delivery.amount + 25.00
+            let deliveryAmount = delivery.amount
+            let loan_reference_id = loan.id 
+            let receipt_no = delivery.receipt_number
+            LoanOfferConfirmation(loan,loanedAmount,deliveryAmount,loan_reference_id,receipt_no)
+
+            //change delivery status
+            delivery.status = 1;
+            delivery.save((err, delivery)=>{
+                if(err) console.log(err);
+                console.log(delivery);
+            });
+
+            let response = `END Congratulations, M-Weza has paid for your delivery. You now have a loan of KES: 
+            ${delivery.amount + 25}`
+            res.send(response);
+        }else{
+            const testMSISDN = customer.customer_account_msisdn.substring(customer.customer_account_msisdn.length - 12)
+            //console.log(testMSISDN)
+            const amount = lastString
+            const accountRef = testMSISDN
+            //res.send(JSON.stringify(result))
+            let result = await mpesaAPI.lipaNaMpesaOnline(testMSISDN, amount, config.mpesa.STKCallbackURL + '/lipanampesa/success', accountRef)
+            console.log(result.data)
+            let rcd = checkoutFunc(result.data,customer.customer_account_msisdn,amount,config.mpesa.ShortCode)
+            console.log(rcd)
+            let response = `END Wait for the MPesa prompt`
+            res.send(response);
+        }
     }
 }
 
@@ -105,6 +152,35 @@ let checkoutFunc = async (json, phone, amount, shortcode ) =>{
         paybill: shortcode
     })
     return rst
+}
+
+let LoanOfferConfirmation = async (loan,loanedAmount,deliveryAmount,loan_reference_id,receipt_no) => {
+    var options = { method: 'POST',
+    url: config.twiga.url+'confirm_loan',
+    headers: 
+    {   'cache-control': 'no-cache',
+        'Authorization': 'Bearer '+config.twiga.bearerToken,
+        'Content-Type': 'application/json' },
+    body: 
+    {   loaned_amount: loan_amount,
+        due_date: '2019-09-03 00:00:00',
+        delivery_amount: deliveryAmount,
+        due_amount: loanedAmount,
+        loan_reference_id: loan_reference_id,
+        receipt_no: receipt_no },
+    json: true };
+
+    request(options, function (error, response, body) {
+        if (error) throw new Error(error);
+
+        console.log(body);
+        loan.twiga_response = JSON.stringify(body);
+        loan.save((err, loan)=>{
+            if(err) console.log(err);
+            console.log(loan);
+        });
+
+    });
 }
 
 module.exports = CustomerModule;

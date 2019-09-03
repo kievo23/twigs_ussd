@@ -54,11 +54,11 @@ let agentUssd =  async (agent,text,req, res)=>{
     return resetPassword(agent,text);
   }else  if(agent.active != 1){
     console.log("not activated")
-    let response = `CON agent ${agent.person.first_name} your account is not actived`
+    let response = `END agent ${agent.person.first_name} your account is not actived. Kindly contact M-Weza for details on 07.....`
     res.send(response)
   }else if(text == '' || lastString== '##'){
     console.log("welcome screen")
-    let response = `CON Welcome agent ${agent.person.first_name} your account is ready!!
+    let response = `CON Welcome agent ${agent.person.first_name}
     1. Register Customer
     2. Reset a Customer Password`
     res.send(response)

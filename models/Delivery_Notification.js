@@ -1,4 +1,5 @@
 const Sequelize = require("sequelize");
+const moment = require('moment');
 const sequelize = require('../config/db');
 const PERSON = require('./Person');
 const CUSTOMER = require('./Customer');
@@ -14,7 +15,7 @@ const Delivery = sequelize.define('delivery_notification',{
         allowNull: true,
     },
     notification_identifier :  {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: true,
     },
     receipt_number :  {
@@ -22,31 +23,35 @@ const Delivery = sequelize.define('delivery_notification',{
         allowNull: false,
     },
     amount: {
-        type: Sequelize.TEXT,
+        type: Sequelize.DOUBLE,
         allowNull: true,
     },
     delivery_id: {
-        type: Sequelize.TEXT,
+        type: Sequelize.STRING,
         allowNull: true,
     },
     delivery_date: {
-        type: Sequelize.BOOLEAN,
-        allowNull: true,
-    },
-    route_team_id: {
-        type: Sequelize.BOOLEAN,
-        allowNull: true,
-    },
-    customer_id: {
         type: Sequelize.DATE,
         allowNull: true,
     },
+    route_team_id: {
+        type: Sequelize.STRING,
+        allowNull: true,
+    },
+    customer_id: {
+        type: Sequelize.STRING,
+        allowNull: true,
+    },
     till_number: {
-        type: Sequelize.DOUBLE,
+        type: Sequelize.STRING,
         allowNull: true,
     },
     phone: {
-        type: Sequelize.DOUBLE,
+        type: Sequelize.STRING,
+        allowNull: true,
+    },
+    status: {
+        type: Sequelize.BOOLEAN,
         allowNull: true,
     },
     deleted: {
@@ -69,8 +74,20 @@ const Delivery = sequelize.define('delivery_notification',{
         type: Sequelize.DATE,
         allowNull: true,
     },
-    createdAt: { type: Sequelize.DATE, field: 'created_at' },
-    updatedAt: { type: Sequelize.DATE, field: 'updated_at' }
+    createdAt: { 
+        type: Sequelize.DATE, 
+        field: 'created_at',
+        get() {
+            return moment(this.getDataValue('createdAt')).format('Do MMM YYYY hh:mm A');
+        }
+    },
+    updatedAt: { 
+        type: Sequelize.DATE, 
+        field: 'updated_at',
+        get() {
+            return moment(this.getDataValue('updatedAt')).format('Do MMM YYYY hh:mm A');
+        } 
+    }
   },{
     timestamps: true, // timestamps will now be true
     underscored: true,
@@ -78,6 +95,6 @@ const Delivery = sequelize.define('delivery_notification',{
   }
 );
 
-//Delivery.belongsTo(CUSTOMER, {foreignKey: 'person_id'});
+Delivery.belongsTo(CUSTOMER, {foreignKey: 'customer_id'});
 
 module.exports = Delivery;

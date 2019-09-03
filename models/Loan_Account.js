@@ -1,7 +1,9 @@
 const Sequelize = require("sequelize");
+const moment = require('moment');
 const sequelize = require('../config/db');
 const PERSON = require('./Person');
 const CUSTOMER = require('./Customer');
+const Delivery = require('./Delivery_Notification');
 
 const Loan_Account = sequelize.define('loan_account',{
     id: {
@@ -45,6 +47,10 @@ const Loan_Account = sequelize.define('loan_account',{
         type: Sequelize.INTEGER,
         allowNull: true,
     },
+    twiga_response: {
+        type: Sequelize.TEXT,
+        allowNull: true
+    },
     deleted: {
         type: Sequelize.INTEGER,
         allowNull: true,
@@ -65,8 +71,20 @@ const Loan_Account = sequelize.define('loan_account',{
         type: Sequelize.DATE,
         allowNull: true,
     },
-    createdAt: { type: Sequelize.DATE, field: 'created_at' },
-    updatedAt: { type: Sequelize.DATE, field: 'updated_at' }
+    createdAt: { 
+        type: Sequelize.DATE, 
+        field: 'created_at',
+        get() {
+            return moment(this.getDataValue('createdAt')).format('Do MMM YYYY hh:mm A');
+        }
+    },
+    updatedAt: { 
+        type: Sequelize.DATE, 
+        field: 'updated_at',
+        get() {
+            return moment(this.getDataValue('updatedAt')).format('Do MMM YYYY hh:mm A');
+        }
+    }
   },{
     timestamps: true, // timestamps will now be true
     underscored: true,
@@ -74,6 +92,6 @@ const Loan_Account = sequelize.define('loan_account',{
   }
 );
 
-//Delivery.belongsTo(CUSTOMER, {foreignKey: 'person_id'});
+Loan_Account.belongsTo(CUSTOMER, {foreignKey: 'customer_account_id'});
 
 module.exports = Loan_Account;
