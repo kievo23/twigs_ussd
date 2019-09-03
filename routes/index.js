@@ -54,7 +54,7 @@ let agentUssd =  async (agent,text,req, res)=>{
     return resetPassword(agent,text);
   }else  if(agent.active != 1){
     console.log("not activated")
-    let response = `END agent ${agent.person.first_name} your account is not actived. Kindly contact M-Weza for details on 07.....`
+    let response = `END agent ${agent.person.first_name} your account is not actived. Kindly contact M-Weza for details on 0700133666`
     res.send(response)
   }else if(text == '' || lastString== '##'){
     console.log("welcome screen")
