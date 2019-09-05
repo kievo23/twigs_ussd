@@ -180,7 +180,7 @@ let LoanOfferConfirmation = async (loan,loanedAmount,deliveryAmount,loan_referen
         'Authorization': 'Bearer '+config.twiga.bearerToken,
         'Content-Type': 'application/json' },
     body: 
-    {   loaned_amount: loanedAmount,
+    {   loaned_amount: deliveryAmount,
         due_date: '2019-09-13 12:55:00',
         delivery_amount: deliveryAmount,
         due_amount: loanedAmount,
