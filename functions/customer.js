@@ -53,14 +53,14 @@ let CustomerModule =  async ( customer, text, req, res) => {
             response = `CON Welcome, Your loan balance is ${balance} KES 
 1. Take loan for the latest delivery
 2. Active Deliveries
-3. Make Payment in Full
+3. Pay in Full
 4. Make Partial Payment
 5. Check LoanLimit
 `
         }else{
             response = `CON Welcome, Your loan balance is ${balance} KES 
 2. Active Deliveries
-3. Make Payment in Full
+3. Pay in Full
 4. Make Partial Payment
 5. Check LoanLimit`
         }
