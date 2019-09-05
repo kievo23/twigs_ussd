@@ -78,7 +78,8 @@ let CustomerModule =  async ( customer, text, req, res) => {
             //Make Payment
             const testMSISDN = customer.customer_account_msisdn.substring(customer.customer_account_msisdn.length - 12)
             //console.log(testMSISDN)
-            const amount = balance
+            const amount = balance.toString()
+            console.log(amount)
             //const accountRef = Math.random().toString(35).substr(2, 7)
             const accountRef = testMSISDN
             //res.send(JSON.stringify(result))
