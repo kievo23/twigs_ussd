@@ -37,6 +37,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
         count = count + 1
         dates = dates + loans[index].createdAt+", "
     }
+    balance = parseFloat(balance).toFixed(2)
     let array = _.split(textnew[arraylength],'*');
     let size = array.length;
     let lastString = _.last(array)
@@ -47,27 +48,33 @@ let CustomerModule =  async ( customer, text, req, res) => {
         //console.log("Main Menu");
         //var m = moment(dates)
         console.log(dates)
-            let response = `CON Welcome, Your loan balance is ${balance} KES
-            1. Active Deliveries
-            2. Make Payment in Full
-            3. Make Partial Payment
-            4. Check LoanLimit`
-            res.send(response)
+        let response = ""
+        if(delivery){
+            response = `CON Welcome, Your loan balance is ${balance} KES 
+1. Take loan for the latest delivery
+2. Active Deliveries
+3. Make Payment in Full
+4. Make Partial Payment
+5. Check LoanLimit
+`
+        }else{
+            response = `CON Welcome, Your loan balance is ${balance} KES 
+2. Active Deliveries
+3. Make Payment in Full
+4. Make Partial Payment
+5. Check LoanLimit`
+        }
+        
+        res.send(response)
     }else if(size == 2){
-        if(lastString == 1){
+        if(lastString == 2){
             //Active Deliveries
             //console.log(deliveries);
             let response = ``
-            if(delivery){
-                response = `CON You have ${count} unpaid delivery of KES: ${balance}  
-            1. To take a loan of KES: ${delivery.amount} on this ${delivery.receipt_number} delivery done on ${delivery.createdAt}          
-            #. Back to main menu`
-            }else{
                 response = `CON You have ${count} unpaid delivery of KES: ${balance}         
-            #. Back to main menu`
-            }            
+#. Back to main menu`          
             res.send(response);
-        }else if(lastString == 2){
+        }else if(lastString == 3){
             //Make Payment
             const testMSISDN = customer.customer_account_msisdn.substring(customer.customer_account_msisdn.length - 12)
             //console.log(testMSISDN)
@@ -79,50 +86,61 @@ let CustomerModule =  async ( customer, text, req, res) => {
             checkoutFunc(result.data,customer.customer_account_msisdn,amount,config.mpesa.ShortCode)
             let response = `END Wait for the MPesa prompt`
             res.send(response)
-        }else if(lastString == 3){
+        }else if(lastString == 4){
             //Check loan Limit
             let response = `CON Input Amount To Pay
-            #. To go back to the main menu`
+#. To go back to the main menu`
             res.send(response);
         }
-        else if(lastString == 4){
+        else if(lastString == 5){
             //Check loan Limit
             let response = `CON Your loan limit is ${customer.account_limit} KES
-            #. To go back to the main menu`
+#. To go back to the main menu`
+            res.send(response);
+        }else if(lastString == 1){
+            let response = `CON You have ${count} unpaid delivery of KES: ${balance}  
+1. To take a loan of KES: ${delivery.amount} on this ${delivery.receipt_number} delivery done on ${delivery.createdAt}          
+#. Back to main menu`
             res.send(response);
         }
     }else if(size == 3){
         //Make Payment
         if(lastString == 1){
             //Make the delivery a loan entry
-            let loan = await LoanAccount.create({
-                'customer_account_id' : customer.id,
-                'delivery_id' : delivery.id,
-                'principal_amount' : delivery.amount,
-                'interest_charged' : 25.00,
-                'loan_amount' : delivery.amount + 25.00,
-                'loan_balance' : delivery.amount + 25.00,
-                'loan_penalty' : 0.00,
-                'loan_status' : 0
-            });
-
-            //Send loan confirmation
-            let loanedAmount = delivery.amount + 25.00
-            let deliveryAmount = delivery.amount
-            let loan_reference_id = loan.id 
-            let receipt_no = delivery.receipt_number
-            LoanOfferConfirmation(loan,loanedAmount,deliveryAmount,loan_reference_id,receipt_no)
-
-            //change delivery status
-            delivery.status = 1;
-            delivery.save((err, delivery)=>{
-                if(err) console.log(err);
-                console.log(delivery);
-            });
-
-            let response = `END Congratulations, M-Weza has paid for your delivery. You now have a loan of KES: 
-            ${delivery.amount + 25}`
-            res.send(response);
+            if(customer.account_limit > (balance + delivery.amount)){
+                let loan = await LoanAccount.create({
+                    'customer_account_id' : customer.id,
+                    'delivery_id' : delivery.id,
+                    'principal_amount' : delivery.amount,
+                    'interest_charged' : 25.00,
+                    'loan_amount' : delivery.amount + 25.00,
+                    'loan_balance' : delivery.amount + 25.00,
+                    'loan_penalty' : 0.00,
+                    'loan_status' : 0
+                });
+    
+                //Send loan confirmation
+                let loanedAmount = delivery.amount + 25.00
+                let deliveryAmount = delivery.amount
+                let loan_reference_id = loan.id 
+                let receipt_no = delivery.receipt_number
+                LoanOfferConfirmation(loan,loanedAmount,deliveryAmount,loan_reference_id,receipt_no)
+    
+                //change delivery status
+                delivery.status = 1;
+                delivery.save((err, delivery)=>{
+                    if(err) console.log(err);
+                    console.log(delivery);
+                });
+    
+                let response = `END Congratulations, M-Weza has paid for your delivery. You now have a loan of KES: 
+                ${delivery.amount + 25}`
+                res.send(response);
+            }else{
+                let response = `END Sorry, You will have exceeded your loan limit, Mweza can not facilitate this loan}`
+                res.send(response);
+            }
+            
         }else{
             const testMSISDN = customer.customer_account_msisdn.substring(customer.customer_account_msisdn.length - 12)
             //console.log(testMSISDN)
