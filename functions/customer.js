@@ -78,8 +78,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
             //Make Payment
             const testMSISDN = customer.customer_account_msisdn.substring(customer.customer_account_msisdn.length - 12)
             //console.log(testMSISDN)
-            const amount = balance.toString()
-            console.log(amount)
+            const amount = Math.ceil(parseFloat(balance));
             //const accountRef = Math.random().toString(35).substr(2, 7)
             const accountRef = testMSISDN
             //res.send(JSON.stringify(result))
@@ -147,13 +146,13 @@ let CustomerModule =  async ( customer, text, req, res) => {
         }else{
             const testMSISDN = customer.customer_account_msisdn.substring(customer.customer_account_msisdn.length - 12)
             //console.log(testMSISDN)
-            const amount = lastString
+            const amount = Math.ceil(parseFloat(lastString))
             const accountRef = testMSISDN
             //res.send(JSON.stringify(result))
             let result = await mpesaAPI.lipaNaMpesaOnline(testMSISDN, amount, config.mpesa.STKCallbackURL + '/lipanampesa/success', accountRef)
             console.log(result.data)
             let rcd = checkoutFunc(result.data,customer.customer_account_msisdn,amount,config.mpesa.ShortCode)
-            console.log(rcd)
+            //console.log(rcd)
             let response = `END Wait for the MPesa prompt`
             res.send(response);
         }
