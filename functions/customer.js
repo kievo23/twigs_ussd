@@ -181,10 +181,10 @@ let LoanOfferConfirmation = async (loan,loanedAmount,deliveryAmount,loan_referen
         'Content-Type': 'application/json' },
     body: 
     {   loaned_amount: loanedAmount,
-        due_date: '2019-09-05 12:55:00',
+        due_date: '2019-09-13 12:55:00',
         delivery_amount: deliveryAmount,
         due_amount: loanedAmount,
-        loan_reference_id: loan_reference_id,
+        loan_reference_id: "mweza"+loan_reference_id,
         receipt_no: receipt_no },
     json: true };
 
