@@ -7,6 +7,8 @@ const request = require("request");
 const Person = require('../models/Person');
 const Agent = require('../models/Sales_Agent');
 const Customer = require('../models/Customer');
+//Config
+const config = require(__dirname + '/../config.json');
 //SMS
 const sendSMS = require('../functions/sendSMS');
 
@@ -132,12 +134,12 @@ let notifyTwiga = (user) => {
         console.log(customer)
         if(customer){
             var options = { method: 'POST',
-            url: 'https://staging.dms-v2.api.twiga.tech/integrations/fintech/v2/opt_in',
+            url: config.twiga.url+'opt_in',
             headers:
             {
                 'cache-control': 'no-cache',
                 'Content-Type' : 'application/json',
-                'Authorization': 'Bearer Q3ts8iU8Bv4WpNnxE1V3Ry2OHe27rK1u'
+                'Authorization': 'Bearer '+config.twiga.bearerToken
             },
             body: 
             {

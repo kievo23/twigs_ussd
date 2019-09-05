@@ -137,7 +137,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
                 ${delivery.amount + 25}`
                 res.send(response);
             }else{
-                let response = `END Sorry, You will have exceeded your loan limit, Mweza can not facilitate this loan}`
+                let response = `END Sorry, You will have exceeded your loan limit, Mweza can not facilitate this loan`
                 res.send(response);
             }
             
