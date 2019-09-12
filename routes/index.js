@@ -28,7 +28,7 @@ router.post('*', async (req, res) => {
   let agent = await Agent.findOne({ include: [Person], where: { agent_msisdn : phone } });
   //console.log(agent);
   if(!customer && !agent){
-    let response = `END Thankyou for your interest in M-Weza. 
+    let response = `END Thank you for your interest in M-Weza. 
 Kindly contact M-Weza on 
 0700133666`
     res.send(response);

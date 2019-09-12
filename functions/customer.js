@@ -56,13 +56,14 @@ let CustomerModule =  async ( customer, text, req, res) => {
 3. Pay in Full
 4. Pay Partially
 5. Check Limit
-`
+6. Change PIN`
         }else{
             response = `CON Your pending M-Weza balance is ${balance} KES 
 2. Active Deliveries
 3. Pay in Full
 4. Pay Partially
-5. Check Limit`
+5. Check Limit
+6. Change PIN`
         }
         
         res.send(response)
