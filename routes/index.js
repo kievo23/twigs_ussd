@@ -100,12 +100,15 @@ customerUssd : function customerUssd(customer,text,req,res){
     return resetPassword(customer,text,req,res);
   }
   else if(customer.active != 1) {
-    let response = `END ${customer.person.first_name} your account is not actived`
+    let response = `END Dear ${customer.person.first_name}, your account is not activated
+    Kindly call 0700133666 for more details`
     res.send(response)
   }else if (text == '' || lastString== '00') {
     // This is the first request. Note how we start the response with CON
     let response = `CON Welcome ${customer.person.first_name} to Twiga M-Weza Payment Platform
-    Input your password to proceed`
+    
+    Input your password to proceed
+    (Forgot password? Call 0700133666)`
     //console.log(req.session);
     res.send(response)
   } else if (firstString.length == 4) {
