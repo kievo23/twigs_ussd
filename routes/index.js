@@ -104,7 +104,7 @@ customerUssd : function customerUssd(customer,text,req,res){
     res.send(response)
   }else if (text == '' || lastString== '00') {
     // This is the first request. Note how we start the response with CON
-    let response = `CON Welcome ${customer.person.first_name} to Twiga Payments Platform
+    let response = `CON Welcome ${customer.person.first_name} to Twiga M-Weza Payment Platform
     Input your password to proceed`
     //console.log(req.session);
     res.send(response)

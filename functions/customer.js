@@ -50,19 +50,19 @@ let CustomerModule =  async ( customer, text, req, res) => {
         console.log(dates)
         let response = ""
         if(delivery){
-            response = `CON Welcome, Your loan balance is ${balance} KES 
-1. Take loan
+            response = `CON Your pending M-Weza balance is ${balance} KES 
+1. Request M-Weza facilitation
 2. Active Deliveries
 3. Pay in Full
-4. Make Partial Payment
-5. Check LoanLimit
+4. Pay Partially
+5. Check Limit
 `
         }else{
-            response = `CON Welcome, Your loan balance is ${balance} KES 
+            response = `CON Your pending M-Weza balance is ${balance} KES 
 2. Active Deliveries
 3. Pay in Full
-4. Make Partial Payment
-5. Check LoanLimit`
+4. Pay Partially
+5. Check Limit`
         }
         
         res.send(response)

@@ -26,13 +26,13 @@ let registration = async(text,req, res) => {
         let response = `CON Enter the customer's First Name`
         res.send(response)
     }else if(size == 3){
-        let response = `CON Enter the customer's other names`
+        let response = `CON Enter the customer's Other Names`
         res.send(response)
     }else if(size == 4){
         let response = `CON Enter the customer's National ID`
         res.send(response)
     }else if(size == 5){
-        let response = `CON Enter the customer's Gender e.g. m for male or f for female`
+        let response = `CON Enter the customer's Gender e.g. M for Male or F for Female`
         res.send(response)
     }else if(size == 6){
         let response = `CON Enter the customer's Date of Birth e.g. 1979-12-30`
@@ -89,7 +89,7 @@ let registration = async(text,req, res) => {
                     salt_key: salt
                 });
                 notifyTwiga(customer);
-                sendSMS(phone,"Your one time password is: "+code);
+                sendSMS(phone,"Welcome "+person.first_name+", Your one time password is: "+code);
                 let response =`END Registration successful!!`
                 res.send(response)
             }else{
@@ -112,7 +112,7 @@ let registration = async(text,req, res) => {
                     pin: hash,
                     salt_key: salt
                 })
-                sendSMS(phone,"Your one time password is: "+code);
+                sendSMS(phone,"Welcome "+person.first_name+", Your one time password is: "+code);
                 notifyTwiga(customer);
                 let response =`END Registration successful!!`
                 res.send(response)

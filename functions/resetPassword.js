@@ -18,7 +18,7 @@ let resetPassword = (customer,text,req,res) => {
     console.log(size);
     if(size == 1 && text == ""){
         let response =`CON Welcome to M-Weza Platform
-        Enter your one time password`
+    Please enter your one time password`
         res.send(response)
     }else if(size == 1 && text != ""){
         console.log(firstString)
@@ -48,14 +48,14 @@ let resetPassword = (customer,text,req,res) => {
                     let response =`CON Sorry, Something went wrong`
                     res.send(response)
                 }else{
-                    let response =`CON Congratulations, you have activated your account`
+                    let response =`CON Congratulations, your account is now active. You can now access M-Weza services`
                     res.send(response)
                 }
             })
-            let response =`END Congratulations, you have activated your account`
+            let response =`END Congratulations, your account is now active. You can now access M-Weza services`
             res.send(response)
         }else{
-            let response =`CON Your passwords dont match.
+            let response =`CON Oops! Your passwords do not match. Kindly try again
             00. Retry`
             res.send(response)
         }
