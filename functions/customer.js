@@ -21,7 +21,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
     let textnew = _.split(text,'#')
     arraylength = textnew.length - 1
     //console.log(textnew.length)
-    let delivery = await Delivery.findOne({ 
+    let delivery = await Delivery.findAll({ 
         where: { status : 0, customer_id : customer.id },
         order: [ [ 'createdAt', 'DESC' ]],
     })
@@ -51,7 +51,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
         let response = ""
         if(delivery){
             response = `CON Welcome, Your loan balance is ${balance} KES 
-1. Take loan for the latest delivery
+1. Take loan
 2. Active Deliveries
 3. Pay in Full
 4. Make Partial Payment
@@ -137,6 +137,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
     
                 let response = `END Congratulations, M-Weza has paid for your delivery. You now have a loan of KES: 
                 ${delivery.amount + 25}`
+                //sendSMS(phone,"Your one time password is: "+code);
                 res.send(response);
             }else{
                 let response = `END Sorry, You will have exceeded your loan limit, Mweza can not facilitate this loan`

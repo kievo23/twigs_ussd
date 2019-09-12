@@ -20,45 +20,45 @@ let registration = async(text,req, res) => {
     let firstString = _.first(array)
     console.log(array);
     if(size == 1){
-        let response = `CON Enter Customer surname`
+        let response = `CON Enter the customer's Surname`
         res.send(response)
     }else if(size == 2){
-        let response = `CON Enter Customer first name`
+        let response = `CON Enter the customer's First Name`
         res.send(response)
     }else if(size == 3){
-        let response = `CON Enter Customer other names`
+        let response = `CON Enter the customer's other names`
         res.send(response)
     }else if(size == 4){
-        let response = `CON Enter Customer National ID`
+        let response = `CON Enter the customer's National ID`
         res.send(response)
     }else if(size == 5){
-        let response = `CON Enter Customer Gender e.g. m for male or f for female`
+        let response = `CON Enter the customer's Gender e.g. m for male or f for female`
         res.send(response)
     }else if(size == 6){
-        let response = `CON Enter Customer Date of Birth e.g. 1979-12-30`
+        let response = `CON Enter the customer's Date of Birth e.g. 1979-12-30`
         res.send(response)
     }else if(size == 7){
-        let response = `CON Enter Customer Primary Phone No.`
+        let response = `CON Enter the customer's Primary Phone No.`
         res.send(response)
     }else if(size == 8){
-        let response = `CON Enter Customer Alternative Phone No.`
+        let response = `CON Enter the customer's Alternative Phone No.`
         res.send(response)
     }else if(size == 9){
-        let response = `CON Enter Physical location.`
+        let response = `CON Enter the customer's Physical location.`
         res.send(response)
     }else if(size == 10){
-        let response = `CON Confirm customer registration?. 
+        let response = `CON Confirm customer's registration?. 
         1. Complete registration`
         res.send(response)
     }else if(size == 11){
-        let surname = array[1];
-        let firstname = array[2];
-        let othernames = array[3];
-        let id = array[4];
-        let gender = array[5];
-        let dob = array[6];
-        let phone = "+254"+last(array[7], 9);
-        let alternative_phone = "+254"+last(array[8], 9);;
+        let surname = array[1].trim();
+        let firstname = array[2].trim();
+        let othernames = array[3].trim();
+        let id = array[4].trim();
+        let gender = array[5].trim();
+        let dob = array[6].trim();
+        let phone = "+254"+last(array[7].trim(), 9);
+        let alternative_phone = "+254"+last(array[8].trim(), 9);;
         let location = array[9];
         
         let person = await Person.findOne({ where: {id_number: id} })

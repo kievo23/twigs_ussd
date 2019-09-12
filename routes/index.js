@@ -28,7 +28,9 @@ router.post('*', async (req, res) => {
   let agent = await Agent.findOne({ include: [Person], where: { agent_msisdn : phone } });
   //console.log(agent);
   if(!customer && !agent){
-    let response = `END Kindly contact M-Weza agent to register your account`
+    let response = `END Thankyou for your interest in M-Weza. 
+Kindly contact M-Weza on 
+0700133666`
     res.send(response);
   }else if(agent){
     //console.log("agent")
@@ -54,13 +56,13 @@ let agentUssd =  async (agent,text,req, res)=>{
     return resetPassword(agent,text);
   }else  if(agent.active != 1){
     console.log("not activated")
-    let response = `END agent ${agent.person.first_name} your account is not actived. Kindly contact M-Weza for details on 0700133666`
+    let response = `END Agent ${agent.person.first_name}, your account is not yet activated. Kindly contact M-Weza for more details on 0700133666.`
     res.send(response)
   }else if(text == '' || lastString== '##'){
     console.log("welcome screen")
     let response = `CON Welcome agent ${agent.person.first_name}
-    1. Register Customer
-    2. Reset a Customer Password`
+  1. Register Customer
+  2. Reset a Customer Password`
     res.send(response)
   }else if(firstString == '1'){
     return registration.registration(text,req, res)
