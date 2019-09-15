@@ -93,5 +93,6 @@ const Loan_Account = sequelize.define('loan_account',{
 );
 
 Loan_Account.belongsTo(CUSTOMER, {foreignKey: 'customer_account_id'});
+Loan_Account.belongsTo(Delivery, {foreignKey: 'delivery_id'});
 
 module.exports = Loan_Account;

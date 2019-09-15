@@ -21,12 +21,12 @@ let CustomerModule =  async ( customer, text, req, res) => {
     let textnew = _.split(text,'#')
     arraylength = textnew.length - 1
     //console.log(textnew.length)
-    let delivery = await Delivery.findAll({ 
+    let deliveries = await Delivery.findAll({ 
         where: { status : 0, customer_id : customer.id },
         order: [ [ 'createdAt', 'DESC' ]],
     })
 
-    let loans = await LoanAccount.findAll({ where: { loan_status : 0 } })
+    let loans = await LoanAccount.findAll({include: [Delivery], where: { loan_status : 0, customer_account_id : customer.id } })
     let balance = 0
     let count = 0
     let dates = ''
@@ -49,7 +49,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
         //var m = moment(dates)
         console.log(dates)
         let response = ""
-        if(delivery){
+        if(deliveries){
             response = `CON Your pending M-Weza balance is ${balance} KES 
 1. Request M-Weza facilitation
 2. Active Deliveries
@@ -71,9 +71,15 @@ let CustomerModule =  async ( customer, text, req, res) => {
         if(lastString == 2){
             //Active Deliveries
             //console.log(deliveries);
-            let response = ``
-                response = `CON You have ${count} unpaid delivery of KES: ${balance}         
-#. Back to main menu`          
+            let additionalString = "";
+            for (i = 0; i < loans.length; ++i) {
+                //console.log(loans[i])
+    additionalString += `${i+1}. Delivery of KES: ${loans[i].delivery_notification.amount} receipt no: ${loans[i].delivery_notification.receipt_number} delivery done on ${loans[i].delivery_notification.createdAt}
+`
+            }
+            let response = `CON You have ${count} unpaid delivery of KES: ${balance}  
+${additionalString}
+#. Back to main menu`     
             res.send(response);
         }else if(lastString == 3){
             //Make Payment
@@ -97,19 +103,44 @@ let CustomerModule =  async ( customer, text, req, res) => {
         }
         else if(lastString == 5){
             //Check loan Limit
-            let response = `CON Your loan limit is ${customer.account_limit} KES
+            let response = `CON Your facilitation limit is ${customer.account_limit} KES
+#. To go back to the main menu`
+            res.send(response);
+        }else if(lastString == 6){
+            //Check loan Limit
+            let response = `CON Input customer number to reset
 #. To go back to the main menu`
             res.send(response);
         }else if(lastString == 1){
+            let additionalString = "";
+            for (i = 0; i < deliveries.length; ++i) {
+    additionalString += `${i+1}. Take a facilitation of KES: ${deliveries[i].amount} on this ${deliveries[i].receipt_number} delivery done on ${deliveries[i].createdAt}
+`
+            }
             let response = `CON You have ${count} unpaid delivery of KES: ${balance}  
-1. To take a loan of KES: ${delivery.amount} on this ${delivery.receipt_number} delivery done on ${delivery.createdAt}          
+${additionalString}
 #. Back to main menu`
             res.send(response);
         }
     }else if(size == 3){
         //Make Payment
-        if(lastString == 1){
+        if(array[1] == 4 ){
+            const testMSISDN = customer.customer_account_msisdn.substring(customer.customer_account_msisdn.length - 12)
+            //console.log(testMSISDN)
+            const amount = Math.ceil(parseFloat(lastString))
+            const accountRef = testMSISDN
+            //res.send(JSON.stringify(result))
+            let result = await mpesaAPI.lipaNaMpesaOnline(testMSISDN, amount, config.mpesa.STKCallbackURL + '/lipanampesa/success', accountRef)
+            console.log(result.data)
+            let rcd = checkoutFunc(result.data,customer.customer_account_msisdn,amount,config.mpesa.ShortCode)
+            //console.log(rcd)
+            let response = `END Wait for the MPesa prompt`
+            res.send(response);
+        }else if(array[1] == 1 ){
             //Make the delivery a loan entry
+            let index = parseInt(lastString)- 1;
+            
+            let delivery = deliveries[index];
             if(customer.account_limit > (balance + delivery.amount)){
                 let loan = await LoanAccount.create({
                     'customer_account_id' : customer.id,
@@ -136,27 +167,37 @@ let CustomerModule =  async ( customer, text, req, res) => {
                     console.log(delivery);
                 });
     
-                let response = `END Congratulations, M-Weza has paid for your delivery. You now have a loan of KES: 
+                let response = `END Congratulations, M-Weza has paid for your delivery of KES: 
                 ${delivery.amount + 25}`
+                sendSMS(customer.customer_account_msisdn,`Congratulations, M-Weza has paid for your delivery of KES: 
+                ${delivery.amount + 25}`);
                 //sendSMS(phone,"Your one time password is: "+code);
                 res.send(response);
             }else{
-                let response = `END Sorry, You will have exceeded your loan limit, Mweza can not facilitate this loan`
+                let response = `END Sorry, Your request has exceeded your facilitation limit. Your limit is KES ${customer.account_limit}`
                 res.send(response);
             }
             
-        }else{
-            const testMSISDN = customer.customer_account_msisdn.substring(customer.customer_account_msisdn.length - 12)
-            //console.log(testMSISDN)
-            const amount = Math.ceil(parseFloat(lastString))
-            const accountRef = testMSISDN
-            //res.send(JSON.stringify(result))
-            let result = await mpesaAPI.lipaNaMpesaOnline(testMSISDN, amount, config.mpesa.STKCallbackURL + '/lipanampesa/success', accountRef)
-            console.log(result.data)
-            let rcd = checkoutFunc(result.data,customer.customer_account_msisdn,amount,config.mpesa.ShortCode)
-            //console.log(rcd)
-            let response = `END Wait for the MPesa prompt`
-            res.send(response);
+        }else if(array[1] == 6 ){
+            let code = Math.floor(1000 + Math.random() * 9000);
+            let salt = bcrypt.genSaltSync(10);
+            let hash = bcrypt.hashSync(code.toString(), salt)
+            let phone = "+254"+lastString.substring(lastString.length - 9);
+            let customer = await Customer.findOne({ include: [Person], where: {customer_account_msisdn: phone} })
+            console.log("reset password");
+            if(customer){
+                customer.pin_reset = 1
+                customer.pin = hash
+                customer.salt_key = salt
+                customer.save((err, user)=>{
+                    if(err) console.log(err);
+                    console.log(user);
+                });
+
+                sendSMS(phone,"Welcome "+customer.person.first_name+", Your one time password is: "+code);
+                let response =`END Password successfully reset`
+                res.send(response)
+            }
         }
     }
 }

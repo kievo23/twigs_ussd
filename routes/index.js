@@ -93,17 +93,24 @@ let agentUssd =  async (agent,text,req, res)=>{
 
 
 customerUssd : function customerUssd(customer,text,req,res){
-  let array = _.split(text,'*')
+  let textnew = _.split(text,'#')
+  arraylength = textnew.length - 1
+  let newtext = textnew[arraylength].substring(1);
+  let array = _.split(newtext,'*');
+
+  //let array = _.split(text,'*')
+  console.log(array)
+  console.log(newtext)
   let lastString = _.last(array)
   let firstString = _.first(array)
   if(customer.pin_reset == 1) {
-    return resetPassword(customer,text,req,res);
+    return resetPassword(customer,newtext,req,res);
   }
   else if(customer.active != 1) {
     let response = `END Dear ${customer.person.first_name}, your account is not activated
     Kindly call 0700133666 for more details`
     res.send(response)
-  }else if (text == '' || lastString== '00') {
+  }else if (newtext == '' || lastString== '#' || array.length == 0) {
     // This is the first request. Note how we start the response with CON
     let response = `CON Welcome ${customer.person.first_name} to Twiga M-Weza Payment Platform
     
@@ -117,15 +124,15 @@ customerUssd : function customerUssd(customer,text,req,res){
     //console.log(array[0])
     let rst = bcrypt.compareSync(array[0], customer.pin);
     if(rst == true){
-      return customerModule(customer,text,req,res)
+      return customerModule(customer,newtext,req,res)
     }else{
       let response = `CON Wrong password.
-      00. go back to previous menu`
+      #. go back to previous menu`
       res.send(response)
     }   
   } else {
     let response = `CON Invalid Input
-    00. Main Menu
+    #. Main Menu
     CANCEL. End USSD`
     res.send(response)
   }
