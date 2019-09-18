@@ -95,7 +95,14 @@ let agentUssd =  async (agent,text,req, res)=>{
 customerUssd : function customerUssd(customer,text,req,res){
   let textnew = _.split(text,'#')
   arraylength = textnew.length - 1
-  let newtext = textnew[arraylength].substring(1);
+  let firstChar = textnew[arraylength].charAt(0)
+  let newtext = "";
+  if(firstChar == "*"){
+    newtext = textnew[arraylength].substring(1);
+  }else{
+    newtext = textnew[arraylength]
+  }
+  
   let array = _.split(newtext,'*');
 
   //let array = _.split(text,'*')
