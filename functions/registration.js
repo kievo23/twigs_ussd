@@ -131,7 +131,7 @@ let notifyTwiga = (user) => {
     Customer.findOne({ include: [Person], where: {customer_account_msisdn: user.customer_account_msisdn} })
     .then(function(customer){
         console.log("customer")
-        console.log(customer)
+        //console.log(customer)
         if(customer){
             var options = { method: 'POST',
             url: config.twiga.url+'opt_in',
@@ -155,19 +155,20 @@ let notifyTwiga = (user) => {
                 if (error) throw new Error(error); 
                 
                 let obj = JSON.parse(response.request.body);
+                console.log(response.statusCode)
                 Customer.findOne({ where : {customer_account_msisdn: obj.phone_number } })
                 .then(function(user){
                     if(response.statusCode == 200){
-                        //customer is verified by twiga. And is actually a twiga customer
-                        user.active = 1;
-                        user.account_limit = 5000;
+                        console.log("customer is verified by twiga. And is actually a twiga customer")
+                        user.active = true;
+                        user.account_limit = 5000.00;
                     }
                     user.twiga_response = JSON.stringify(body);
                     user.save((err, user)=>{
                         if(err) console.log(err);
                         console.log(user);
-                    });
-                    
+                    }); 
+                    //console.log(user)                   
                 });
                 let res = `Twiga Notified`;
                 return res;

@@ -68,6 +68,10 @@ const Customer = sequelize.define('customers',{
         type: Sequelize.BOOLEAN,
         allowNull: true,
     },
+    account_limit: {
+        type: Sequelize.DOUBLE,
+        allowNull: true,
+    },
     deleted: {
         type: Sequelize.BOOLEAN,
         allowNull: true,
