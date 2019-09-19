@@ -146,15 +146,15 @@ ${additionalString}
                     'customer_account_id' : customer.id,
                     'delivery_id' : delivery.id,
                     'principal_amount' : delivery.amount,
-                    'interest_charged' : 25.00,
-                    'loan_amount' : delivery.amount + 25.00,
-                    'loan_balance' : delivery.amount + 25.00,
+                    'interest_charged' : 15.00,
+                    'loan_amount' : delivery.amount + 15.00,
+                    'loan_balance' : delivery.amount + 15.00,
                     'loan_penalty' : 0.00,
                     'loan_status' : 0
                 });
     
                 //Send loan confirmation
-                let loanedAmount = delivery.amount + 25.00
+                let loanedAmount = delivery.amount + 15.00
                 let deliveryAmount = delivery.amount
                 let loan_reference_id = loan.id 
                 let receipt_no = delivery.receipt_number
