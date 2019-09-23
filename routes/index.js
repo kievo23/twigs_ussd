@@ -53,7 +53,7 @@ let agentUssd =  async (agent,text,req, res)=>{
   console.log(array)
   if(agent.pin_reset == 1){
     console.log("reset password")
-    return resetPassword(agent,text);
+    return resetPassword(agent,text,req,res);
   }else  if(agent.active != 1){
     console.log("not activated")
     let response = `END Agent ${agent.person.first_name}, your account is not yet activated. Kindly contact M-Weza for more details on 0700133666.`
