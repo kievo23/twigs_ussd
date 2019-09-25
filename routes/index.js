@@ -115,7 +115,11 @@ customerUssd : function customerUssd(customer,text,req,res){
   }
   else if(customer.active != 1) {
     let response = `END Dear ${customer.person.first_name}, your account is not activated
-    Kindly call 0700133666 for more details`
+  Kindly call 0700133666 for more details`
+    res.send(response)
+  }else  if(agent.blocked != 1){
+    let response = `END Dear ${customer.person.first_name}, your account is blocked. 
+  Kindly contact M-Weza for more details on 0700133666.`
     res.send(response)
   }else if (newtext == '' || lastString== '#' || array.length == 0) {
     // This is the first request. Note how we start the response with CON

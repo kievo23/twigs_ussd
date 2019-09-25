@@ -3,9 +3,6 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 
 //MODELS
-const Person = require('../models/Person');
-const Agent = require('../models/Sales_Agent');
-const Customer = require('../models/Customer');
 //SMS
 const sendSMS = require('../functions/sendSMS');
 
@@ -45,10 +42,10 @@ let resetPassword = (customer,text,req,res) => {
             customer.salt_key = salt
             customer.save((err, success) => {
                 if(err){
-                    let response =`CON Sorry, Something went wrong`
+                    let response =`END Sorry, Something went wrong`
                     res.send(response)
                 }else{
-                    let response =`CON Congratulations, your account is now active. You can now access M-Weza services`
+                    let response =`END Congratulations, your account is now active. You can now access M-Weza services`
                     res.send(response)
                 }
             })
@@ -56,7 +53,7 @@ let resetPassword = (customer,text,req,res) => {
             res.send(response)
         }else{
             let response =`CON Oops! Your passwords do not match. Kindly try again
-            00. Retry`
+            #. Retry`
             res.send(response)
         }
         console.log(text)
