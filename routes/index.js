@@ -117,7 +117,7 @@ customerUssd : function customerUssd(customer,text,req,res){
     let response = `END Dear ${customer.person.first_name}, your account is not activated
   Kindly call 0700133666 for more details`
     res.send(response)
-  }else  if(agent.blocked != 1){
+  }else  if(customer.blocked != 1){
     let response = `END Dear ${customer.person.first_name}, your account is blocked. 
   Kindly contact M-Weza for more details on 0700133666.`
     res.send(response)
