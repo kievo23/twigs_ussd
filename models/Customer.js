@@ -16,6 +16,10 @@ const Customer = sequelize.define('customers',{
         type: Sequelize.INTEGER,
         allowNull: true,
     },
+    agent_id :  {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+    },
     customer_account_msisdn :  {
         type: Sequelize.STRING,
         allowNull: false,

@@ -12,7 +12,7 @@ const config = require(__dirname + '/../config.json');
 //SMS
 const sendSMS = require('../functions/sendSMS');
 
-let registration = async(text,req, res) => {
+let registration = async(text,req, res, agent) => {
     
     let array = _.split(text,'*');
     let size = array.length;

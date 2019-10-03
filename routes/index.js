@@ -65,7 +65,7 @@ let agentUssd =  async (agent,text,req, res)=>{
   2. Reset a Customer Password`
     res.send(response)
   }else if(firstString == '1'){
-    return registration.registration(text,req, res)
+    return registration.registration(text,req, res, agent)
   }else if(firstString == '2' && size == 1){
     let response =`CON Enter Customer Number`
     res.send(response)
