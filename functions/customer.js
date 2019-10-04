@@ -146,7 +146,7 @@ ${additionalString}
                     'customer_account_id' : customer.id,
                     'delivery_id' : delivery.id,
                     'principal_amount' : delivery.amount,
-                    'interest_charged' : 25.00,
+                    'trn_charge' : '25.00',
                     'loan_amount' : delivery.amount + 25.00,
                     'loan_balance' : delivery.amount + 25.00,
                     'loan_penalty' : 0.00,

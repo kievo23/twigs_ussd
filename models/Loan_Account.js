@@ -27,6 +27,10 @@ const Loan_Account = sequelize.define('loan_account',{
         type: Sequelize.DOUBLE,
         allowNull: true,
     },
+    trn_charge: {
+        type: Sequelize.STRING,
+        allowNull: true,
+    },
     interest_charged: {
         type: Sequelize.DOUBLE,
         allowNull: true,
