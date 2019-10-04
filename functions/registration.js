@@ -64,6 +64,7 @@ let registration = async(text,req, res, agent) => {
         let person = await Person.findOne({ where: {id_number: id} })
             // project will be the first entry of the Projects table with the title 'aProject' || null
             //console.log(person);
+            //console.log(agent);
         if(!person){
             let person = await Person.create({
                 surname: surname,
@@ -81,12 +82,14 @@ let registration = async(text,req, res, agent) => {
             let hash = bcrypt.hashSync(code.toString(), salt);
             let customer = await Customer.findOne({ include: [Person], where: {customer_account_msisdn: phone} })
             if(!customer){
+                
                 customer = await Customer.create({
                     customer_account_msisdn: phone,
                     person_id: person.id,
                     pin_reset: 1,
                     pin: hash,
-                    salt_key: salt
+                    salt_key: salt,
+                    agent_id: parseInt(agent.id)
                 });
                 notifyTwiga(customer);
                 sendSMS(phone,"Welcome "+person.first_name+", Your one time password is: "+code);
@@ -110,7 +113,8 @@ let registration = async(text,req, res, agent) => {
                     person_id: person.id,
                     pin_reset: 1,
                     pin: hash,
-                    salt_key: salt
+                    salt_key: salt,
+                    agent_id: parseInt(agent.id)
                 })
                 sendSMS(phone,"Welcome "+person.first_name+", Your one time password is: "+code);
                 notifyTwiga(customer);

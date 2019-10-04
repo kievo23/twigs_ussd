@@ -32,7 +32,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
     let dates = ''
     //console.log(deliveries)
     for (index = 0; index < loans.length; ++index) {
-        balance += loans[index].loan_balance
+        balance += Math.ceil(parseFloat(loans[index].loan_balance))
         console.log(loans[index].loan_balance)
         count = count + 1
         dates = dates + loans[index].createdAt+", "
@@ -141,7 +141,7 @@ ${additionalString}
             let index = parseInt(lastString)- 1;
             
             let delivery = deliveries[index];
-            if(customer.account_limit > (balance + delivery.amount)){
+            if(Math.ceil(parseFloat(customer.account_limit)) > Math.ceil(parseFloat(balance + delivery.amount))){
                 let loan = await LoanAccount.create({
                     'customer_account_id' : customer.id,
                     'delivery_id' : delivery.id,
