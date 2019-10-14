@@ -92,7 +92,7 @@ let registration = async(text,req, res, agent) => {
                     agent_id: parseInt(agent.id)
                 });
                 notifyTwiga(customer);
-                sendSMS(phone,"Welcome "+person.first_name+", Your one time password is: "+code);
+                sendSMS(phone,"Welcome "+person.first_name+", your One Time Password is: "+code+". Kindly dial *483*818# to complete the registration process");
                 let response =`END Registration successful!!`
                 res.send(response)
             }else{
@@ -116,7 +116,7 @@ let registration = async(text,req, res, agent) => {
                     salt_key: salt,
                     agent_id: parseInt(agent.id)
                 })
-                sendSMS(phone,"Welcome "+person.first_name+", Your one time password is: "+code);
+                sendSMS(phone,"Welcome "+person.first_name+", your One Time Password is: "+code+". Kindly dial *483*818# to complete the registration process");
                 notifyTwiga(customer);
                 let response =`END Registration successful!!`
                 res.send(response)

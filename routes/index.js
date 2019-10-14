@@ -20,9 +20,10 @@ router.get('/', (req, res) => {
 });
 
 router.post('*', async (req, res) => {
-  let {sessionId, serviceCode, phoneNumber, text} = req.body
-  let phone = "+254"+phoneNumber.substring(phoneNumber.length - 9);
-
+  let {sessionId, serviceCode, phoneNumber, text} = req.body;
+  console.log(phoneNumber)
+  let phone = "+254"+ phoneNumber.substring(phoneNumber.length - 9);
+  
   let customer = await Customer.findOne({ include: [Person], where: { customer_account_msisdn : phone } });
   //console.log(customer.person.FIRST_NAME);
   let agent = await Agent.findOne({ include: [Person], where: { agent_msisdn : phone } });

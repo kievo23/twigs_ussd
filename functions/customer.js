@@ -24,7 +24,7 @@ let CustomerModule =  async ( customer, text, req, res) => {
     let deliveries = await Delivery.findAll({ 
         where: { status : 0, customer_id : customer.id },
         order: [ [ 'createdAt', 'DESC' ]],
-    })
+    },{limit: 5})
 
     let loans = await LoanAccount.findAll({include: [Delivery], where: { loan_status : 0, customer_account_id : customer.id } })
     let balance = 0
@@ -49,7 +49,9 @@ let CustomerModule =  async ( customer, text, req, res) => {
         //var m = moment(dates)
         console.log(dates)
         let response = ""
-        if(deliveries){
+        console.log("Delivery")
+        console.log(deliveries)
+        if(deliveries.length > 0){
             response = `CON Your pending M-Weza balance is ${balance} KES 
 1. Request M-Weza facilitation
 2. Active Deliveries
@@ -139,9 +141,8 @@ ${additionalString}
         }else if(array[1] == 1 ){
             //Make the delivery a loan entry
             let index = parseInt(lastString)- 1;
-            
             let delivery = deliveries[index];
-            if(Math.ceil(parseFloat(customer.account_limit)) > Math.ceil(parseFloat(balance + delivery.amount))){
+            if(Math.ceil(parseFloat(customer.account_limit)) > Math.ceil(parseFloat(balance) + parseFloat(delivery.amount))){
                 let loan = await LoanAccount.create({
                     'customer_account_id' : customer.id,
                     'delivery_id' : delivery.id,
@@ -167,11 +168,10 @@ ${additionalString}
                     console.log(delivery);
                 });
     
-                let response = `END Congratulations, M-Weza has paid for your delivery of KES: 
-                ${delivery.amount + 25}`
-                sendSMS(customer.customer_account_msisdn,`Congratulations, M-Weza has paid for your delivery of KES: 
-                ${delivery.amount + 25}`);
-                //sendSMS(phone,"Your one time password is: "+code);
+                let response = `END Congratulations, M-Weza has paid for your delivery of KES: ${delivery.amount + 25}`
+                let deliveryPlusTrans = delivery.amount + 25
+                let msg = "Dear "+customer.person.first_name+", as you requested, M-Weza will pay for your delivery # "+delivery.delivery_id+" of Ksh."+delivery.amount +" today. M-Weza Facilitation balance is Ksh. "+deliveryPlusTrans+". Dial *483*818# to make payment in 3 days"
+                sendSMS(customer.customer_account_msisdn,msg);
                 res.send(response);
             }else{
                 let response = `END Sorry, Your request has exceeded your facilitation limit. Your limit is KES ${customer.account_limit}`
