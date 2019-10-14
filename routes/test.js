@@ -18,6 +18,7 @@ const config = require(__dirname + '/../config.json');
 router.post('/optin', async (req, res) => {
     if(!req.body.phone){
         res.send("have a phone parameter")
+        res.end()
     }
     let customer = await Customer.findOne({ where: { customer_account_msisdn : req.body.phone } });
     console.log(req.body.phone)
@@ -26,7 +27,6 @@ router.post('/optin', async (req, res) => {
     }else{
       res.send("customer not found")
     }
-    res.send('Authorized');
   });
 
 router.post('/stkpush', async (req, res) => {

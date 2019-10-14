@@ -134,8 +134,8 @@ let registration = async(text,req, res, agent) => {
 let notifyTwiga = (user) => {
     Customer.findOne({ include: [Person], where: {customer_account_msisdn: user.customer_account_msisdn} })
     .then(function(customer){
-        console.log("customer")
-        //console.log(customer)
+        //console.log("customer")
+        //console.log(customer.customer_account_msisdn)
         if(customer){
             var options = { method: 'POST',
             url: config.twiga.url+'opt_in',
@@ -155,25 +155,24 @@ let notifyTwiga = (user) => {
             },
             json: true };
 
-            request(options, function (error, response, body, user) {
-                if (error) throw new Error(error); 
+            request(options, async function (error, response, body) {
+                if (error) throw new Error(error);
                 
                 let obj = JSON.parse(response.request.body);
                 console.log(response.statusCode)
-                Customer.findOne({ where : {customer_account_msisdn: obj.phone_number } })
-                .then(function(user){
-                    if(response.statusCode == 200){
-                        console.log("customer is verified by twiga. And is actually a twiga customer")
-                        user.active = true;
-                        user.account_limit = 5000.00;
-                    }
-                    user.twiga_response = JSON.stringify(body);
-                    user.save((err, user)=>{
-                        if(err) console.log(err);
-                        console.log(user);
-                    }); 
-                    //console.log(user)                   
-                });
+                let customer = await Customer.findOne({ include: [Person], where: {customer_account_msisdn: obj.phone_number} })
+                //console.log(customer)
+                
+                if(response.statusCode == 200){
+                    console.log("customer is verified by twiga. And is actually a twiga customer")
+                    customer.active = true;
+                    customer.account_limit = 5000.00;
+                }
+                customer.twiga_response = JSON.stringify(body);
+                customer.save((err, user)=>{
+                    if(err) console.log(err);
+                    //console.log(user);
+                }); 
                 let res = `Twiga Notified`;
                 return res;
             });
