@@ -63,14 +63,15 @@ let agentUssd =  async (agent,text,req, res)=>{
     console.log("welcome screen")
     let response = `CON Welcome agent ${agent.person.first_name}
   1. Register Customer
-  2. Reset a Customer Password`
+  2. Reset a Customer Password
+  3. Activate Web Portal`
     res.send(response)
   }else if(firstString == '1'){
     return registration.registration(text,req, res, agent)
   }else if(firstString == '2' && size == 1){
     let response =`CON Enter Customer Number`
     res.send(response)
-  }else if(size == 2){
+  }else if(firstString == '2' && size == 2){
     console.log(array)
     if(array[0]== '2'){
       let code = Math.floor(1000 + Math.random() * 9000);
@@ -89,6 +90,22 @@ let agentUssd =  async (agent,text,req, res)=>{
       let response =`END Customer is reset successfully`
       res.send(response)
     }
+  }else if(firstString == '3' && size == 1){
+    let response =`CON Enter Your email Address`
+    res.send(response)
+  }else if(firstString == '3' && size == 2){
+    let response =`CON Enter Your Preferred Password`
+    res.send(response)
+  }else if(firstString == '3' && size == 3){
+    //Logic for activation
+    let password = bcrypt.hashSync(array[2], 10);
+    console.log(array)
+    agent.email = array[1]
+    agent.password = password    
+    agent.save((err, user)=>{
+        if(err) console.log(err);
+        console.log(user);
+    })
   }
 }
 

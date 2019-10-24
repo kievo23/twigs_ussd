@@ -172,9 +172,9 @@ let notifyTwiga = (user) => {
                 customer.save((err, user)=>{
                     if(err) console.log(err);
                     //console.log(user);
-                }); 
+                })
                 let res = `Twiga Notified`;
-                return res;
+                return res
             });
             return true;
         }else{

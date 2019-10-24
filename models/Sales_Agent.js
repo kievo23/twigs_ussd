@@ -12,6 +12,10 @@ const Sales_Agent = sequelize.define('sales_agents',{
         type: Sequelize.STRING,
         allowNull: false,
     },
+    email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
     pin :  {
         type: Sequelize.TEXT,
         allowNull: false,
@@ -19,6 +23,10 @@ const Sales_Agent = sequelize.define('sales_agents',{
     salt_key: {
         type: Sequelize.TEXT,
         allowNull: true,
+    },
+    password :  {
+        type: Sequelize.TEXT,
+        allowNull: false,
     },
     blocked: {
         type: Sequelize.BOOLEAN,
