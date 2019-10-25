@@ -105,7 +105,10 @@ let agentUssd =  async (agent,text,req, res)=>{
     agent.save((err, user)=>{
         if(err) console.log(err);
         console.log(user);
-    })
+    });
+    sendSMS(phone,"Welcome to M-Weza web portal. Use your email: "+agent.email+" and your password to login on http://209.97.140.13/agent/login");
+    let response =`CON Congratulations! You can now use the web portal as our agent.`
+    res.send(response)
   }
 }
 
