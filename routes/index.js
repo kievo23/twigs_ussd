@@ -107,7 +107,7 @@ let agentUssd =  async (agent,text,req, res)=>{
         console.log(user);
     });
     sendSMS(agent.agent_msisdn,"Welcome to M-Weza web portal. Use your email: "+agent.email+" and your password to login on http://209.97.140.13/agent/login");
-    let response =`CON Congratulations! You can now use the web portal as our agent.`
+    let response =`END Congratulations! You can now use the web portal as our agent.`
     res.send(response)
   }
 }
