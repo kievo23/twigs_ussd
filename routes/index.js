@@ -155,13 +155,13 @@ customerUssd : function customerUssd(customer,text,req,res){
     // BUSINESS LOGIC FOR
     //console.log(array[0])
     let rst = bcrypt.compareSync(array[0], customer.pin);
-    //if(rst == true){
+    if(rst == true){
       return customerModule(customer,newtext,req,res)
-    //}else{
+    }else{
       let response = `CON Wrong password.
       #. go back to previous menu`
       res.send(response)
-    //}   
+    }   
   } else {
     let response = `CON Invalid Input
     #. Main Menu
