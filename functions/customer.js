@@ -2,6 +2,10 @@ const _ = require('lodash');
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const request = require("request");
+const moment = require('moment');
+
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 //MODELS
 const Person = require('../models/Person');
@@ -21,8 +25,21 @@ let CustomerModule =  async ( customer, text, req, res) => {
     let textnew = _.split(text,'#')
     arraylength = textnew.length - 1
     //console.log(textnew.length)
+    // start today
+    var start = moment().startOf('day');
+    // end today
+    var end = moment().endOf('day');
+    
+    //res.json(end)
     let deliveries = await Delivery.findAll({ 
-        where: { status : 0, customer_id : customer.id },
+        where: { 
+            status : 0, 
+            customer_id : customer.id,
+            createdAt: {
+                [Op.lt]: end,
+                [Op.gt]: start
+              } 
+        },
         order: [ [ 'createdAt', 'DESC' ]],
     },{limit: 5})
 
