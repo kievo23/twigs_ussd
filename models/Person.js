@@ -43,8 +43,16 @@ const Person = sequelize.define('people',{
         type: Sequelize.STRING,
         allowNull: true,
     },
-    physical_location: {
+    business_name: {
         type: Sequelize.STRING,
+        allowNull: true,
+    },
+    route: {
+        type: Sequelize.STRING,
+        allowNull: true,
+    },
+    description: {
+        type: Sequelize.TEXT,
         allowNull: true,
     },
     geo_coordinates: {

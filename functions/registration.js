@@ -18,7 +18,7 @@ let registration = async(text,req, res, agent) => {
     let size = array.length;
     let lastString = _.last(array)
     let firstString = _.first(array)
-    console.log(array);
+    //console.log(array);
     if(size == 1){
         let response = `CON Enter the customer's Surname`
         res.send(response)
@@ -47,10 +47,19 @@ let registration = async(text,req, res, agent) => {
         let response = `CON Enter the customer's Physical location.`
         res.send(response)
     }else if(size == 10){
+        let response = `CON Enter the customer's Business Name.`
+        res.send(response)
+    }else if(size == 11){
+        let response = `CON Enter the customer's Route Name.`
+        res.send(response)
+    }else if(size == 12){
+        let response = `CON Describe your customer.`
+        res.send(response)
+    }else if(size == 13){
         let response = `CON Confirm customer's registration?. 
         1. Complete registration`
         res.send(response)
-    }else if(size == 11){
+    }else if(size == 14){
         let surname = array[1].trim();
         let firstname = array[2].trim();
         let othernames = array[3].trim();
@@ -59,11 +68,14 @@ let registration = async(text,req, res, agent) => {
         let dob = array[6].trim();
         let phone = "+254"+last(array[7].trim(), 9);
         let alternative_phone = "+254"+last(array[8].trim(), 9);;
-        let location = array[9];
+        let location = array[9].trim();
+        let business_name = array[10].trim();
+        let route_name = array[11].trim();
+        let desc = array[12].trim();
         
         let person = await Person.findOne({ where: {id_number: id} })
             // project will be the first entry of the Projects table with the title 'aProject' || null
-            //console.log(person);
+        //console.log(person);
             //console.log(agent);
         if(!person){
             let person = await Person.create({
@@ -76,7 +88,11 @@ let registration = async(text,req, res, agent) => {
                 primary_msisdn: phone,
                 alternate_msisdn: alternative_phone,
                 physical_location: location,
+                business_name: business_name,
+                route: route_name,
+                description: desc,
             })
+            //console.log(person);
             let code = Math.floor(1000 + Math.random() * 9000);
             let salt = bcrypt.genSaltSync(10);
             let hash = bcrypt.hashSync(code.toString(), salt);
@@ -96,7 +112,7 @@ let registration = async(text,req, res, agent) => {
                 let response =`END Registration successful!!`
                 res.send(response)
             }else{
-                let response =`END Client is already registered!!`
+                let response =`END Client has been registered!!`
                 res.send(response)
             }
             // let response =`CON Registration successful!!`
